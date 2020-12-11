@@ -9,7 +9,12 @@ parent: ModbusBridge
 
 # Modbus Bridge API description
 
-**Note**: all API calls for `ModbusServer` are valid for the bridge as well (except the constructors of course) - see the [ModbusServer API description](/modbusserver) for these.
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+All API calls for `ModbusServer` are valid for the bridge as well (except the constructors of course) - see the [ModbusServer API description](/modbusserver) for these.
 
 You will have to include the matching header file in your code for the bridge type you want to use:
 - `ModbusBridgeEthernet.h` for the Ethernet-based bridge
