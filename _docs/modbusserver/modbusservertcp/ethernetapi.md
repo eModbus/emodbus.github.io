@@ -10,16 +10,16 @@ grand_parent: ModbusServer
 
 # ModbusServerTCP Ethernet
 
-Inconsistencies between the WiFi and Ethernet implementations in the core libraries required a split of ModbusServerTCP into the ``ModbusServerEthernet`` and ``ModbusServerWiFi`` variants.
+Inconsistencies between the WiFi and Ethernet implementations in the core libraries required a split of ModbusServerTCP into the `ModbusServerEthernet` and `ModbusServerWiFi` variants.
 
 Both are sharing the majority of methods etc., but need to be included with different file names and have different object names as well.
 
 All relevant calls after initialization of the respective ModbusServer object are identical.
 
-```
+```cpp
 #include "ModbusServerEthernet.h"
 ...
 ModbusServerEthernet myServer;
 ...
 ```
-in your source file. You will not have to add ``#include <Ethernet.h>``, as this is done in the library. It does not do any harm if you do, though.
+in your source file. You will not have to add `#include <Ethernet.h>`, as this is done in the library. It does not do any harm if you do, though.

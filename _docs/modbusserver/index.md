@@ -12,11 +12,11 @@ ModbusServer (aka slave) allows you to concentrate on the server functionality -
 
 You write callback functions to handle requests for accepted function codes and register those with the ModbusServer. All requests matching one of the registered callbacks will be forwarded to these callbacks. In the callback, you generate the response that will be returned to the requester.
 
-Any request for a function code without one of your callbacks registered for it will be answered by an ``ILLEGAL_FUNCTION_CODE`` or ``INVALID_SERVER`` response automatically.
+Any request for a function code without one of your callbacks registered for it will be answered by an `ILLEGAL_FUNCTION_CODE` or `INVALID_SERVER` response automatically.
 
 ## Basic use
-Here is an example of a Modbus server running on WiFi, that reacts on function codes 0x03:``READ_HOLD_REGISTER`` and 0x04:``READ_INPUT_REGISTER`` with the same callback function.
-```
+Here is an example of a Modbus server running on WiFi, that reacts on function codes 0x03:`READ_HOLD_REGISTER` and 0x04:`READ_INPUT_REGISTER` with the same callback function.
+```cpp
 #include <Arduino.h>
 #include "ModbusServerWiFi.h"
 

@@ -15,7 +15,7 @@ With these two functions you can change the two Modbus standard values in-place,
 
 {: .ml-8 }
 Warning
-{: .label .label-yellow}
+{: .label .label-red}
 
 {: .px-8 }
 if the message is shorter than 2 bytes, the two methods will do nothing.

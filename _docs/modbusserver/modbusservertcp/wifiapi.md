@@ -11,10 +11,10 @@ grand_parent: ModbusServer
 # ModbusServerWiFi
 
 To use the WiFi version, you will have to use
-```
+```cpp
 #include "ModbusServerWiFi.h"
 ...
 ModbusServerWiFi myServer;
 ...
 ```
-in your source file. You will not have to add ``#include <WiFi.h>``, as this is done in the library. It does not do any harm if you do, though.
+in your source file. You will not have to add `#include <WiFi.h>`, as this is done in the library. It does not do any harm if you do, though.
