@@ -19,7 +19,13 @@ All log statements with log levels higher than that of `LOG_LEVEL` will not be i
 
 ## Runtime log level 
 - the `MBUlogLvl`` `extern`` variable may be used to set a different log level at runtime. It will be set to ``LOG_LEVEL`` initially. 
-**NOTE**: setting the runtime log level above that of `LOG_LEVEL` will have only an effect for those source files where there is a different `LOCAL_LOG_LEVEL` defined, that is above `LOG_LEVEL`!
+
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+Setting the runtime log level above that of `LOG_LEVEL` will have only an effect for those source files where there is a different `LOCAL_LOG_LEVEL` defined, that is above `LOG_LEVEL`!
 
 ## Output channel
 All output will be sent to the output defined in `LOGDEVICE`. The default is `Serial`, but any `Print`-derived object will do.
