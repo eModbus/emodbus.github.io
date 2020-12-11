@@ -22,7 +22,7 @@ This method will return a `0` as well, if the function code could not be read.
 `getError()` will return the error code in a Modbus error response message. If the message is no error response, you will get a `SUCCESS` code instead.
 
 ## The `[]` operator
-A.You can use the well-known bracket operator with a `ModbusMessage` to get the *n*th byte of a message: `uint8_t byte = msg[7];`
+You can use the well-known bracket operator with a `ModbusMessage` to get the *n*th byte of a message: `uint8_t byte = msg[7];`
 If the message is shorter than the requested byte number, you will get a `0` instead.
 Opposite to its `std::vector` sibling, the `[]` operator does *not* extend the message length!
 
