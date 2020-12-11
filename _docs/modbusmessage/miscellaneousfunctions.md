@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Miscellaneuous functions
+title: Miscellaneous functions
 nav_order: 4
 description: "eModbus is an all-inclusive Modbus implementation, created for ESP32 and Arduino"
 permalink: /miscellaneous-modbusmessage
