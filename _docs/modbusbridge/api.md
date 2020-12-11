@@ -45,7 +45,7 @@ The `aliasID` must be unique for the bridge. Attempts to attach the same `aliasI
 The call will return `false` in these cases.
 - `serverID`: the server ID of the remote server. This is the ID the server natively is using on the Modbus the client is connected to.
 - `functionCode`: the function code that shall be accessed on the remote server.
-This may be any FC allowed by the Modbus standard (see [Function Codes](/modbusmessage#functioncodes) above), including the special `ALL_FUNCTION_CODES` non-standard value. The latter will open the bridge for any function code sent without further checking. See [Filtering](#filtering) for some refined recipes.
+This may be any FC allowed by the Modbus standard (see [Function Codes](/modbusmessage-constructors#functioncodes) above), including the special `ALL_FUNCTION_CODES` non-standard value. The latter will open the bridge for any function code sent without further checking. See [Filtering](#filtering) for some refined recipes.
 - `*client`: this must be a pointer to any `ModbusClient` type, that is connecting to the external Modbus the remote server is living in.
 
 The TCP `attachServer` call has two more parameters needed to address the TCP host where the server is located:
