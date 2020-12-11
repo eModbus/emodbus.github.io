@@ -84,7 +84,7 @@ Each request received will be counted. The `getMessageCount()` method will retur
 ## `ModbusMessage localRequest(ModbusMessage request)`
 This function is a simple local interface to issue requests to the server running. Responses are returned immediately - there is no request queueing involved. This call is *blocking* for that reason, so be prepared to have to wait until the response is ready!
 
-A bridge (see below) will respond to this call for all known serverID/function code combinations, so the delegated request to a remote server may be involved as well.
+A [``ModbusBridge``](#modbusbridge) will respond to this call for all known serverID/function code combinations, so the delegated request to a remote server may be involved as well.
 
 {: .ml-8 }
 Note
