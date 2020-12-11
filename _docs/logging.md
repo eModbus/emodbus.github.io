@@ -23,8 +23,9 @@ All log statements with log levels higher than that of `LOG_LEVEL` will not be i
 {: .ml-8 }
 Note
 {: .label .label-yellow}
+
 {: .px-8 }
-  Setting the runtime log level above that of `LOG_LEVEL` will have only an effect for those source files where there is a different `LOCAL_LOG_LEVEL` defined, that is above `LOG_LEVEL`!
+Setting the runtime log level above that of `LOG_LEVEL` will have only an effect for those source files where there is a different `LOCAL_LOG_LEVEL` defined, that is above `LOG_LEVEL`!
 
 ## Output channel
 All output will be sent to the output defined in `LOGDEVICE`. The default is `Serial`, but any `Print`-derived object will do.
