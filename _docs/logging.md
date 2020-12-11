@@ -18,7 +18,7 @@ All log statements with log levels higher than that of `LOG_LEVEL` will not be i
 - In the line before the `#include "Logging.h"`, either write `#undef LOCAL_LOG_LEVEL` to accept the global `LOG_LEVEL` for the current file, or `#define LOCAL_LOG_LEVEL LOG_LEVEL_XXX` - with `XXX` as whatever level you like - to set a different level for the current file.
 
 ## Runtime log level 
-- the `MBUlogLvl`` ``extern`` variable may be used to set a different log level at runtime. It will be set to ``LOG_LEVEL`` initially. 
+- the ``MBUlogLvl`` ``extern`` variable may be used to set a different log level at runtime. It will be set to ``LOG_LEVEL`` initially. 
 
 {: .ml-8 }
 Note
