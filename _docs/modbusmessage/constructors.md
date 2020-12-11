@@ -27,7 +27,7 @@ If you will specify an invalid server ID or a Modbus standard function code taki
 This applies to all constructors in this group.
 Parameters to known standard Modbus messages are checked for conformity.
 
-As a `functionCode` you may specify a numeric value or one of the predefined constant names:
+<a name="functioncodes">As</a> a `functionCode` you may specify a numeric value or one of the predefined constant names:
 
 ```cpp
 enum FunctionCode : uint8_t {
