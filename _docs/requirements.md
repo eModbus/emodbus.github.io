@@ -20,6 +20,7 @@ The library was developed for and on ESP32 MCUs in the Arduino core development 
     - std::mutex
     - std::lock_guard
     - std::forward
+    - std::move
     - std::function
     - std::bind
     - std::placeholder
