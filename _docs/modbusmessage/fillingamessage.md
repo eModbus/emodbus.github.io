@@ -73,7 +73,12 @@ It will set the `ModbusMessage` to be an error response, signalling the given `E
 8. Error response method<br>
 `Error setError(uint8_t serverID, uint8_t functionCode, Error errorCode);`
 
-**Note**: a call to one of the `set...()` methods will erase the previous contents of the `ModbusMessage` before filling it!
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+a call to one of the `set...()` methods will erase the previous contents of the `ModbusMessage` before filling it!
 
 ## Adding data to a message
 If a message has been set up - for instance with server ID and function code only, more data can be added to it.
