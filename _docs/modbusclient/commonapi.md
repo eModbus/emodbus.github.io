@@ -50,13 +50,14 @@ It is not strictly *required* to have an error callback registered. But if there
 The `onErrorhandler` call accepts a function pointer with the following signature only:
 
 ```cpp
-void func(ModbusClient::Error, uint32_t token);
+void func(Error errorCode, uint32_t token);
 ```
 
 The parameters are 
+- the ``errorCode`` error the requested server generated
 - the `token` value as described in the `onDataHandler` section above.
 
-The Library is providing a separate wrapper class `ModbusError` that can be assigned or initialized with any `ModbusClient::Error` code and will produce a human-readable error text message if used in `const char *` context. See above in [**Basic use**](https://emodbus.github.io/modbusclient) an example of how to apply it.
+The Library is providing a separate wrapper class `ModbusError` that can be assigned or initialized with any `Error` code and will produce a human-readable error text message if used in `const char *` context. See in in the [Basic use example](https://emodbus.github.io/modbusclient) a way of how to apply it.
   
 ## `uint32_t getMessageCount()`
 Each request that got successfully enqueued is counted. By calling `getMessageCount()` you will be able to read the number accumulated so far.
