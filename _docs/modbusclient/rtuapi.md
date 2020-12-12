@@ -24,7 +24,8 @@ These are the constructor variants for an instance of the `ModbusClientRTU` type
 Note
 {: .label .label-yellow}
 
-{: .px-8 }hile the queue holds pointers to the requests only, the requests need memory as well. If you choose a `queueLimit` too large, you may encounter "out of memory" conditions!
+{: .px-8 }
+While the queue holds pointers to the requests only, the requests need memory as well. If you choose a `queueLimit` too large, you may encounter "out of memory" conditions!
 
 ## `void setTimeout(uint32_t TOV)`
 This call lets you define the time for stating a response timeout. `TOV` is defined in **milliseconds**. When the worker task is waiting for a response from a server, and the specified number of milliseconds has passed without data arriving, it will return a `TIMEOUT` error response.
