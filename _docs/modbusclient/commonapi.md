@@ -100,4 +100,9 @@ So we have:
 Again, there is an eighth `addRequest()`, this time taking a pre-formatted `ModbusMessage`:
 
 8. `Error addRequest(ModbusMessage request, uint32_t token);`
-Note the switched position of the `token` parameter - necessary for the internal handling of the `addRequest()` methods.
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+Please take note of the different position of the `token` parameter in this call - necessary for the internal handling of the `addRequest()` methods.
