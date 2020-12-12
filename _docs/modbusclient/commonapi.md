@@ -62,7 +62,7 @@ The Library is providing a separate wrapper class `ModbusError` that can be assi
 ## `uint32_t getMessageCount()`
 Each request that got successfully enqueued is counted. By calling `getMessageCount()` you will be able to read the number accumulated so far.
 
-Please note that this count is instance-specific, so any ModbusClient instance you created will have its own count.
+Please note that this count is instance-specific, so each ModbusClient instance you created will have its own count.
 
 ## `void begin()` and<br> `void begin(int coreID)`
 This is the most important call to get a ModbusClient instance to work. It will open the request queue and start the background worker task to process the queued requests.
