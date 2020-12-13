@@ -21,6 +21,8 @@ You will have to include the matching header file in your code for the bridge ty
 - `ModbusBridgeWiFi.h` for the WiFi sibling
 - `ModbusBridgeRTU` for a bridge listening on a RTU Modbus
 
+Note that there currently is no AsyncTCP bridge (yet), due to differences in internal implementations.
+
 ## `ModbusBridge()` and<br> `ModbusBridge(uint32_t TOV)`
 These are the constructors for a TCP-based bridge. The optional `TOV` (="timeout value") parameter sets the maximum time the bridge will wait for the responses from external servers. The default value for this is 10000 - 10 seconds.
 
@@ -45,7 +47,7 @@ The `aliasID` must be unique for the bridge. Attempts to attach the same `aliasI
 The call will return `false` in these cases.
 - `serverID`: the server ID of the remote server. This is the ID the server natively is using on the Modbus the client is connected to.
 - `functionCode`: the function code that shall be accessed on the remote server.
-This may be any FC allowed by the Modbus standard (see [Function Codes](/modbusmessage-constructors#functioncodes)), including the special `ALL_FUNCTION_CODES` non-standard value. The latter will open the bridge for any function code sent without further checking. See [Filtering](#filtering) for some refined recipes.
+This may be any FC allowed by the Modbus standard (see [Function Codes](https://emodbus.github.io/modbusmessage-constructors#functioncodes)), including the special `ANY_FUNCTION_CODE` non-standard value. The latter will open the bridge for any function code sent without further checking. See [Filtering](#filtering) for some refined recipes.
 - `*client`: this must be a pointer to any `ModbusClient` type, that is connecting to the external Modbus the remote server is living in.
 
 The TCP `attachServer` call has two more parameters needed to address the TCP host where the server is located:
@@ -82,11 +84,11 @@ To now restrict the use of a few function codes, you will call `denyFunctionCode
 You have to refrain from using the `ANY_FUNCTION_CODE` value here and only use those function codes in `attachServer()` and `addFunctionCode()` that you will allow to be served.
 
 ## More subtle methods
-There is one basic server rule, that also applies to the bridge: "specialized beats generic". That means, if the server/bridge has a detailed order for a server ID/function code combination, it will use that, even if there is another for the same server ID and ANY_FUNCTION_CODE.
+There is one basic server rule, that also applies to the bridge: "specialized beats generic". That means, if the server/bridge has a detailed order for a server ID/function code combination, it will use that, even if there is another for the same server ID and ``ANY_FUNCTION_CODE``.
 Second rule is "last register counts": whatever was known to the server/bridge on how to serve a server ID/function code combination, will be replaced by a later `registerWorker()` call for the same combination without a trace.
 
 You can make use of that in interesting ways:
-- add a local function to serve a certain server ID/function code combination that normally would be served on a remote server. Thus you can mask the external server for that function code at will.
+- add a local function to serve a certain server ID/function code combination that normally would be served on a remote server. Thus you can mask the external server for that function code at will or add a function code serverd locally that the remote server does not even know.
 - add your own local function to respond with a different error than the default `ILLEGAL_FUNCTION` - or not at all.
 - after attaching some explicit function codes for an external server add a local worker for that server ID and `ALL_FUNCTION_CODES` to cover all other codes not explicitly named with a default response.
 
