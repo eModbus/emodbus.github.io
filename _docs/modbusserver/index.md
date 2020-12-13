@@ -10,7 +10,7 @@ has_children: true
 # ModbusServer
 ModbusServer (aka slave) allows you to concentrate on the server functionality - data provision, manipulation etc. -, while the library will take care of the communication part.
 
-You write callback functions to handle requests for accepted function codes and register those with the ModbusServer. All requests matching one of the registered callbacks will be forwarded to these callbacks. In the callback, you generate the response that will be returned to the requester.
+You will write callback functions to handle requests for accepted function codes and register those with the ModbusServer. All requests matching one of the registered callbacks will be forwarded to these callbacks. In the callback, you will generate the response that will be returned to the requester.
 
 Any request for a function code without one of your callbacks registered for it will be answered by an `ILLEGAL_FUNCTION_CODE` or `INVALID_SERVER` response automatically.
 
