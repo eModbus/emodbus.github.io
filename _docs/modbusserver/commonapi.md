@@ -101,4 +101,4 @@ Note
 The `localRequest()` call will work even if the server has not been started (yet) by `start()`, so if you need to communicate in other ways than RTU or TCP, you may make use of that!
 
 ## `void listServer()`
-Mostly intended to be used in debug situations, `listServer()` will output all servers and their function codes served by the ModbusServer to the ``LOGDEVICE`` as defined in ``Logging.h`` (see the section on logging for it).
+Mostly intended to be used in debug situations, `listServer()` will output all servers and their function codes served by the ModbusServer to the ``LOGDEVICE`` as defined in ``Logging.h`` ([see the section on ``Logging`` for it](https://emodbus.github.io/logging)).
