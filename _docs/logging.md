@@ -56,7 +56,8 @@ In all statements, `X` has to be one of the log level letters as specified above
   followed by the specified formatted data.
 - `LOGRAW_X(format, ...);` does the same, but without the line header. This is handy to collect several log output on one line
 - `HEXDUMP_X(label, address, length)` will print out a hexadecimal and ASCII dump of `length` bytes, starting at `address`:
-  Dump header:
+
+Dump header:
 ```
  +-------------------------------- log level
  |  +----------------------------- user-defined label
@@ -65,7 +66,7 @@ In all statements, `X` has to be one of the log level letters as specified above
  v  v                 v        v
 [N] Bridge response: @3FFB49FC/29:
 ```
-  Dump body:
+Dump body:
 ```
     +----------------------------------------------------------- offset (hex)
     |     +----------------------------------------------------- hexadecimal dump
