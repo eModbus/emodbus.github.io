@@ -88,7 +88,7 @@ There is one basic server rule, that also applies to the bridge: "specialized be
 Second rule is "last register counts": whatever was known to the server/bridge on how to serve a server ID/function code combination, will be replaced by a later `registerWorker()` call for the same combination without a trace.
 
 You can make use of that in interesting ways:
-- add a local function to serve a certain server ID/function code combination that normally would be served on a remote server. Thus you can mask the external server for that function code at will or add a function code serverd locally that the remote server does not even know.
+- add a local function to serve a certain server ID/function code combination that normally would be served on a remote server. Thus you can mask the external server for that function code at will or add a function code served locally that the remote server does not even know.
 - add your own local function to respond with a different error than the default `ILLEGAL_FUNCTION` - or not at all.
 - after attaching some explicit function codes for an external server add a local worker for that server ID and `ALL_FUNCTION_CODES` to cover all other codes not explicitly named with a default response.
 
