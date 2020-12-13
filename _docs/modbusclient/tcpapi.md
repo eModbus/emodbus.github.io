@@ -47,8 +47,8 @@ The interval is also applied for each attempt to send a request, it will add to 
 This function is necessary at least once to set the target host IP address and port number (unless that has been done with the constructor already). All requests will be directed to that host/port, until another `setTarget()` call is issued.
 
 {: .ml-8 }
-Note
-{: .label .label-yellow}
+Warning
+{: .label .label-red}
 
 {: .px-8 }
 Without a `setTarget()` or using a client constructor with a target host no `addRequest()` will make any sense for TCP!
