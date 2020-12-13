@@ -31,7 +31,7 @@ Note
 {: .label .label-yellow}
 
 {: .px-8 }
-The caveat for the ModbusClientRTU timeout applies here as well. The timeout will block the worker task up to three times its value, as two retries are attempted by the worker by sending the request again and waiting for a response. 
+The timeout comes with a caveat: it will block the worker task up to three times its value, as two retries are attempted by the worker by sending the request again and waiting for a response. 
 
 The optional `interval` parameter also is given in milliseconds and specifies the time to wait for the worker between two consecutive requests to the same target host. Some servers will need some milliseconds to recover from a previous request; this interval prevents sending another request prematurely. 
 
