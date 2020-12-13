@@ -35,8 +35,7 @@ Note
 {: .label .label-yellow}
 
 {: .px-8 }
-This timeout is blocking the worker task. No other requests will be made while waiting for a response. Furthermore, the worker will retry the failing request two more times. So the `TOV` value in effect can block the worker up to three times the time you specified, if a server is dead. 
-Too short timeout values on the other hand may miss slow servers' responses, so choose your value with care...
+This timeout is blocking the worker task. No other requests will be made while waiting for a response.
 
 ## `uint16_t RTUutils::calcCRC16(uint8_t *data, uint16_t len)` and<br> `uint16_t RTUutils::calcCRC16(ModbusMessage msg)`
 This is a convenient method to calculate a CRC16 value for a given block of bytes. `*data` points to this block, `len` gives the number of bytes to consider.
