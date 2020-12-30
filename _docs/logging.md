@@ -28,7 +28,7 @@ Note
 Setting the runtime log level above that of `LOG_LEVEL` will have only an effect for those source files where there is a different `LOCAL_LOG_LEVEL` defined, that is above `LOG_LEVEL`!
 
 ## Output channel
-All output will be sent to the output defined in `LOGDEVICE`. The default is `Serial`, but any `Print`-derived object will do.
+All output will be sent to the output defined in the extern variable `Print *LOGDEVICE`. The default is `&Serial`, but a pointer to any `Print`-derived object will do. (We did a multi-client telnet log for the ESP8266/ESP8285 for instance - ask in [eModbus Discussions](https://github.com/eModbus/eModbus/discussions) for it if you are interested).
 
 ## Log levels
 Every log level includes all lower level output as well!
