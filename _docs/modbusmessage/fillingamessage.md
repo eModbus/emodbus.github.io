@@ -85,6 +85,7 @@ If a message has been set up - for instance with server ID and function code onl
 
 ### `uint16_t add(T value);`
 `add()` takes the integral `value` of type `T` and appends it MSB-first to the existing message.
+This applies to `uint8_t`, `uint16_t` etc. as well as `int`, `unsigned int` etc.
 `uint8_t b = 9; msg.add(b);` for instance will append one single byte `09` to the message, whereas `uint32_t i = 122316; msg.add(i);` will append four bytes: `00 01 DD CC` (the hexadecimal representation of 122316, MSB-first!).
 
 The `add()` method will return the number of bytes in the message after the addition.
@@ -100,6 +101,10 @@ expressions like `a ? 1 : 2` are converted to `int` by the compiler. So please b
 ### `uint16_t add(T v, ...);`
 `add()` may also be used with more than one integral value and will add the given values one by one. 
 The returned size is that after adding all of the values in a row.
+
+### `uint16_t add(float v);` and `uint16_t add(double v);`
+These two variants are extending the range of "add-able" data types to `float` and `double`.
+The values are added to the message in "pure IEEE754" MSB-first sequence, that is opposite of the order the ESP32 is using internally.
 
 ### `uint16_t add(uint8_t *data, uint16_t dataLen);`
 This version of `add()` will append the given buffer of `dataLen` bytes pointed to by `data`.
