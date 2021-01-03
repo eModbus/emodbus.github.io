@@ -33,9 +33,12 @@ Modbus TCP will require either an Ethernet module like the WizNet W5xxx series c
 Due to an implementation decision done in the ESP32 Arduino core code,
 the correct time to detect a bus communications gap of a few µs (as is used with Modbus communications to state end-of-message) is not effective, as
 the core FIFO handling takes much longer than that.
+Our implementation by default takes the suggested modification of the core as given (described below).
 
 Workaround: in `RTUutils.cpp`uncomment the following line to wait for 16ms(!) for the handling to finish:
+```
       // if (micros() - MR_lastMicros >= 16000) {
+```
 
 Alternate solution: is to modify the uartEnableInterrupt() function in
 the core implementation file `esp32-hal-uart.c`, to have the line
