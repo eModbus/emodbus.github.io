@@ -54,3 +54,7 @@ msg.get(4, words);
 
 ## `uint16_t get(uint16_t index, float& value);` and `uint16_t get(uint16_t index, double& value);` 
 These `get()` variants are to extract a 4-byte IEEE754 float or an 8-byte IEEE754 double from a message. The order of bytes in the message is assumed to be "pure IEEE754" MSB-first.
+
+### User-defined ``float`` and ``double`` byte orders
+These two ``get()`` functions also support the byte-reordering optional third parameters to retrieve a ``float`` or ``double`` value in a byte order different from IEEE754.
+Please see the detailed description at the respective ``add()`` functions!
