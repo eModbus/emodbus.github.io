@@ -57,4 +57,4 @@ These `get()` variants are to extract a 4-byte IEEE754 float or an 8-byte IEEE75
 
 ### User-defined ``float`` and ``double`` byte orders
 These two ``get()`` functions also support the byte-reordering optional third parameters to retrieve a ``float`` or ``double`` value in a byte order different from IEEE754.
-Please see the detailed description at the respective ``add()`` functions!
+Please see the [detailed description](https://emodbus.github.io/filling-a-modbusmessage#user-defined-float-and-double-byte-order) at the respective ``add()`` functions!
