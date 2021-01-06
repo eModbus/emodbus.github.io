@@ -106,6 +106,22 @@ The returned size is that after adding all of the values in a row.
 These two variants are extending the range of "add-able" data types to `float` and `double`.
 The values are added to the message in "pure IEEE754" MSB-first sequence, that is opposite of the order the ESP32 is using internally.
 
+#### User-defined ``float`` and ``double`` byte order
+To cope with Modbus devices not using the IEEE754 byte sequence to communicate ``float`` or ``double`` values, both ``add()`` functions for these data types are supporting an optional second parameter defining the byte order.
+This parameter is constructed as an ORed combination of these four values:
+- ``SWAP_BYTES``
+- ``SWAP_REGISTERS``
+- ``SWAP_WORDS`` (``double`` only)
+- ``SWAP_NIBBLES``
+
+Given the normalized byte order of "0, 1, 2, 3" ("0, 1, 2, 3, 4, 5, 6, 7" for a ``double``), the result of these values is as follows:
+- ``SWAP_BYTES``: "1, 0, 3, 2" ("1, 0, 3, 2, 5, 4, 7, 6")
+- ``SWAP_REGISTERS``: "2, 3, 0, 1" ("2, 3, 0, 1, 6, 7, 4, 5")
+- ``SWAP_WORDS``: only valid for ``double`` - "4, 5, 6, 7, 0, 1, 2, 3,"
+- ``SWAP_NIBBLES`` will change the order of the two 4-bit nibbles in a byte. "0xAB" will be "0xBA", "0x12" gets "0x21" and so on.
+
+A combination of values will yield the combined effect. ``SWAP_BYTES|SWAP_REGISTERS`` for instance will turn a "0, 1, 2, 3" ``float`` into "3, 2, 1, 0".
+
 ### `uint16_t add(uint8_t *data, uint16_t dataLen);`
 This version of `add()` will append the given buffer of `dataLen` bytes pointed to by `data`.
 It also does return the final size of the message.
