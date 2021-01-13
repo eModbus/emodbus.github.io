@@ -17,7 +17,7 @@ Key features:
  - non blocking / asynchronous API
  - server, client and bridge modes
  - TCP (Ethernet, WiFi and Async) and RTU interfaces
- - designed for ESP32, various interfaces supported
+ - designed for ESP32, various interfaces supported; async versions run also on ESP8266
  - all common and user-defined Modbus standard function codes
 
 This has been developed by enthusiasts. While we do our utmost best to make robust software, do not expect any bullet-proof, industry deployable, guaranteed software. See the license to learn about liabilities etc.

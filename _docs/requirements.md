@@ -11,7 +11,8 @@ permalink: /requirements
 The library was developed for and on ESP32 MCUs in the Arduino core development environment. In principle it should run in any environment providing these resources:
 
 - Arduino core functions - Serial interfaces, millis(), delay() etc.
-- FreeRTOS' xTask task functions. Note that there are numerous MCUs running FreeRTOS!
+- FreeRTOS' xTask task functions. Note that there are numerous MCUs running FreeRTOS!  
+The async versions are also usable on ESP8266
 - C++ standard library components
     - std::queue
     - std::vector
