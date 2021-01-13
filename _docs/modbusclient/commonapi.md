@@ -50,18 +50,19 @@ It is not strictly *required* to have an error callback registered. But if there
 The `onErrorhandler` call accepts a function pointer with the following signature only:
 
 ```cpp
-void func(ModbusClient::Error, uint32_t token);
+void func(Error errorCode, uint32_t token);
 ```
 
 The parameters are 
+- the ``errorCode`` error the requested server generated
 - the `token` value as described in the `onDataHandler` section above.
 
-The Library is providing a separate wrapper class `ModbusError` that can be assigned or initialized with any `ModbusClient::Error` code and will produce a human-readable error text message if used in `const char *` context. See above in [**Basic use**](#basic-use) an example of how to apply it.
+The Library is providing a separate wrapper class `ModbusError` that can be assigned or initialized with any `Error` code and will produce a human-readable error text message if used in `const char *` context. See in in the [Basic use example](https://emodbus.github.io/modbusclient) a way of how to apply it.
   
 ## `uint32_t getMessageCount()`
 Each request that got successfully enqueued is counted. By calling `getMessageCount()` you will be able to read the number accumulated so far.
 
-Please note that this count is instance-specific, so any ModbusClient instance you created will have its own count.
+Please note that this count is instance-specific, so each ModbusClient instance you created will have its own count.
 
 ## `void begin()` and<br> `void begin(int coreID)`
 This is the most important call to get a ModbusClient instance to work. It will open the request queue and start the background worker task to process the queued requests.
@@ -99,4 +100,9 @@ So we have:
 Again, there is an eighth `addRequest()`, this time taking a pre-formatted `ModbusMessage`:
 
 8. `Error addRequest(ModbusMessage request, uint32_t token);`
-Note the switched position of the `token` parameter - necessary for the internal handling of the `addRequest()` methods.
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+Please take note of the different position of the `token` parameter in this call - necessary for the internal handling of the `addRequest()` methods.

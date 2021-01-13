@@ -22,4 +22,4 @@ Key features:
 
 This has been developed by enthusiasts. While we do our utmost best to make robust software, do not expect any bullet-proof, industry deployable, guaranteed software. See the license to learn about liabilities etc.
 
-We do welcome any ideas, suggestions, bug reports or questions. Please use the "Github issues" to report these!
+We do welcome any ideas, suggestions, bug reports or questions. Please use the "Github issues" to report bugs or request new features, and the "Discussions" area to chat along!

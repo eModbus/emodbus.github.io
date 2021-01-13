@@ -49,7 +49,7 @@ A `MBSworker` callback must return a data object of `ModbusMessage`.
 There are two special response messages predefined:
 - `NIL_RESPONSE`: no response at all will be sent back to the requester
 - `ECHO_RESPONSE`: the request will be sent back without any modification as a response. 
-This is common for the writing function code requestsi that the Modbus standard defines.
+This is common for the writing function code requests that the Modbus standard defines.
 
 {: .ml-8 }
 Note
@@ -70,10 +70,10 @@ Note
 {: .label .label-yellow}
 
 {: .px-8 }
-Please take care to reduce the `sourceLength` parameter accordingly in subsequent calls to `getValue()`!
+Please take care to reduce the `sourceLength` parameter accordingly in subsequent calls to `getValue()` to avoid attempts to read memory behind the end of your ``source`` buffer!
 
 ## `MBSworker getWorker(uint8_t serverID, uint8_t functionCode)`
-You may check if a given serverID/functionCode combination has been covered by a callback with `getWorker()`. This method will return the callback function pointer, if there is any, and a `nullptr` else.
+You may check if a given serverID/functionCode combination is being covered by a callback with `getWorker()`. This method will return the callback function pointer, if there is any, and a `nullptr` else.
 
 ## `bool isServerFor(uint8_t serverID)`
 `isServerFor()` will return `true`, if at least one callback has been registered for the given `serverID`, and `false` else.
@@ -84,7 +84,14 @@ Each request received will be counted. The `getMessageCount()` method will retur
 ## `ModbusMessage localRequest(ModbusMessage request)`
 This function is a simple local interface to issue requests to the server running. Responses are returned immediately - there is no request queueing involved. This call is *blocking* for that reason, so be prepared to have to wait until the response is ready!
 
-A bridge (see below) will respond to this call for all known serverID/function code combinations, so the delegated request to a remote server may be involved as well.
+A [``ModbusBridge``](https://emodbus.github.io/modbusbridge) will respond to this call for all known serverID/function code combinations, so the delegated request to a remote server may be involved as well.
+
+{: .ml-8 }
+Warning
+{: .label .label-red}
+
+{: .px-8 }
+Be aware that your ``localRequest()`` calls may interfere with requests coming in over the server's interface connection! If you are planning to make use of the parallel calls, be sure to protect the server data access by a mutex or similar construction.
 
 {: .ml-8 }
 Note
@@ -94,4 +101,4 @@ Note
 The `localRequest()` call will work even if the server has not been started (yet) by `start()`, so if you need to communicate in other ways than RTU or TCP, you may make use of that!
 
 ## `void listServer()`
-Mostly intended to be used in debug situations, `listServer()` will output all servers and their function codes served by the ModbusServer to the Serial Monitor.
+Mostly intended to be used in debug situations, `listServer()` will output all servers and their function codes served by the ModbusServer to the ``LOGDEVICE`` as defined in ``Logging.h`` ([see the section on ``Logging`` for it](https://emodbus.github.io/logging)).

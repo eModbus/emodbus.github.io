@@ -18,7 +18,7 @@ There are a few differences to the TCP-based ModbusServers:
 The first parameter, `serial` is mandatory, as it gives the serial interface used to connect to the RTU Modbus to the server.
 `timeout` is less important as it is for TCP. It defines after what time of inactivity the server should loop around and re-initialize some working data.
 A value of `20000` (20 seconds) is reasonable.
-The third (optional) parameter `rtsPin` is the same as for the RTU Modbus client described above - if you are using a RS485 adaptor requiring a DE/RE line to be maintained, `rtsPin` should be the GPIO number of the wire to that DE/RE line. The linbrary will take care of toggling the pin.
+The third (optional) parameter `rtsPin` is the same as for the RTU Modbus client described above - if you are using a RS485 adaptor requiring a DE/RE line to be maintained, `rtsPin` should be the GPIO number of the wire to that DE/RE line. The library will take care of toggling the pin.
 
 ## `bool start()` and<br> `bool start(int coreID)`
 With `start()` the server will create its background task and start listening to the Modbus. 

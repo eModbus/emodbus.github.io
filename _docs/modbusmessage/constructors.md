@@ -22,12 +22,12 @@ All further constructors will fill the `ModbusMessage` with a defined Modbus mes
 ## `ModbusMessage(uint8_t serverID, uint8_t functionCode)`
 This is usable to set up Modbus standard messages for the Modbus function codes requiring no additional parameter, as 0x07, 0x0B, 0x0C and 0x11.
 
-If you will specify a serverID or function code outside the Modbus specifications, an error message is sent to `Serial` and the message is not generated.
+If you will specify an invalid server ID or a Modbus standard function code taking a different number of parameters, an error message is sent to `Serial` and the message is not generated.
 
 This applies to all constructors in this group.
 Parameters to known standard Modbus messages are checked for conformity.
 
-As a `functionCode` you may specify a numeric value or one of the predefined constant names:
+<a name="functioncodes">As</a> a `functionCode` you may specify a numeric value or one of the predefined constant names:
 
 ```cpp
 enum FunctionCode : uint8_t {

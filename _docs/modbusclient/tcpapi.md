@@ -31,7 +31,7 @@ Note
 {: .label .label-yellow}
 
 {: .px-8 }
-The caveat for the ModbusClientRTU timeout applies here as well. The timeout will block the worker task up to three times its value, as two retries are attempted by the worker by sending the request again and waiting for a response. 
+The timeout comes with a caveat: it will block the worker task up to three times its value, as two retries are attempted by the worker by sending the request again and waiting for a response. 
 
 The optional `interval` parameter also is given in milliseconds and specifies the time to wait for the worker between two consecutive requests to the same target host. Some servers will need some milliseconds to recover from a previous request; this interval prevents sending another request prematurely. 
 
@@ -47,8 +47,8 @@ The interval is also applied for each attempt to send a request, it will add to 
 This function is necessary at least once to set the target host IP address and port number (unless that has been done with the constructor already). All requests will be directed to that host/port, until another `setTarget()` call is issued.
 
 {: .ml-8 }
-Note
-{: .label .label-yellow}
+Warning
+{: .label .label-red}
 
 {: .px-8 }
 Without a `setTarget()` or using a client constructor with a target host no `addRequest()` will make any sense for TCP!

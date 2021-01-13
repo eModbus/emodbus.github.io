@@ -8,7 +8,7 @@ permalink: /installation
 
 # Installation
 
-We recommend to use the PlatformIO IDE. There, in your project's platformio.ini file, add the Github URL of this library to your `lib_deps = entry` in the `[env:...]` section of that file:
+We recommend to use the [PlatformIO IDE](https://platformio.org). There, in your project's ``platformio.ini`` file, add the Github URL of this library to your `lib_deps = entry` in the `[env:...]` section of that file:
 
 ```ini
 [platformio]
@@ -20,10 +20,10 @@ We recommend to use the PlatformIO IDE. There, in your project's platformio.ini 
 # some settings
 
 lib_deps = 
-  ModbusClient=https://github.com/ESP32ModbusUnified/ModbusUnified.git
+  ModbusClient=https://github.com/eModbus/eModbus.git
 ```
 
-If you are using the Arduino IDE, you will want to copy the library folder into your library directory. In Windows this will be `C:\Users\<user_name>\Documents\Arduino\libraries` normally. For Arduino IDE, you'll have to install the dependencies manually. These are:
+If you are using the Arduino IDE, you will want to copy the library folder into your library directory. In Windows this will be `C:\Users\<user_name>\Documents\Arduino\libraries` normally. For Arduino IDE you'll have to install the library dependencies manually. These are:
 
-  - AsyncTCP (https://github.com/me-no-dev/AsyncTCP)
-  - Ethernet-compatible library (example: https://github.com/maxgerhardt/Ethernet)
+  - [AsyncTCP](https://github.com/me-no-dev/AsyncTCP)
+  - An Ethernet.h-compatible library (example: https://github.com/maxgerhardt/Ethernet)

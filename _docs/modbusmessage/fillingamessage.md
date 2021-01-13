@@ -73,13 +73,19 @@ It will set the `ModbusMessage` to be an error response, signalling the given `E
 8. Error response method<br>
 `Error setError(uint8_t serverID, uint8_t functionCode, Error errorCode);`
 
-**Note**: a call to one of the `set...()` methods will erase the previous contents of the `ModbusMessage` before filling it!
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+a call to one of the `set...()` methods will erase the previous contents of the `ModbusMessage` before filling it!
 
 ## Adding data to a message
 If a message has been set up - for instance with server ID and function code only, more data can be added to it.
 
 ### `uint16_t add(T value);`
 `add()` takes the integral `value` of type `T` and appends it MSB-first to the existing message.
+This applies to `uint8_t`, `uint16_t` etc. as well as `int`, `unsigned int` etc.
 `uint8_t b = 9; msg.add(b);` for instance will append one single byte `09` to the message, whereas `uint32_t i = 122316; msg.add(i);` will append four bytes: `00 01 DD CC` (the hexadecimal representation of 122316, MSB-first!).
 
 The `add()` method will return the number of bytes in the message after the addition.
@@ -95,6 +101,26 @@ expressions like `a ? 1 : 2` are converted to `int` by the compiler. So please b
 ### `uint16_t add(T v, ...);`
 `add()` may also be used with more than one integral value and will add the given values one by one. 
 The returned size is that after adding all of the values in a row.
+
+### `uint16_t add(float v);` and `uint16_t add(double v);`
+These two variants are extending the range of "add-able" data types to `float` and `double`.
+The values are added to the message in "pure IEEE754" MSB-first sequence, that is opposite of the order the ESP32 is using internally.
+
+#### User-defined ``float`` and ``double`` byte order
+To cope with Modbus devices not using the IEEE754 byte sequence to communicate ``float`` or ``double`` values, both ``add()`` functions for these data types are supporting an optional second parameter defining the byte order.
+This parameter is constructed as an ORed combination of these four values:
+- ``SWAP_BYTES``
+- ``SWAP_REGISTERS``
+- ``SWAP_WORDS`` (``double`` only)
+- ``SWAP_NIBBLES``
+
+Given the normalized byte order of "0, 1, 2, 3" ("0, 1, 2, 3, 4, 5, 6, 7" for a ``double``), the result of these values is as follows:
+- ``SWAP_BYTES``: "1, 0, 3, 2" ("1, 0, 3, 2, 5, 4, 7, 6")
+- ``SWAP_REGISTERS``: "2, 3, 0, 1" ("2, 3, 0, 1, 6, 7, 4, 5")
+- ``SWAP_WORDS``: only valid for ``double`` - "4, 5, 6, 7, 0, 1, 2, 3,"
+- ``SWAP_NIBBLES`` will change the order of the two 4-bit nibbles in a byte. "0xAB" will be "0xBA", "0x12" gets "0x21" and so on.
+
+A combination of values will yield the combined effect. ``SWAP_BYTES|SWAP_REGISTERS`` for instance will turn a "0, 1, 2, 3" ``float`` into "3, 2, 1, 0".
 
 ### `uint16_t add(uint8_t *data, uint16_t dataLen);`
 This version of `add()` will append the given buffer of `dataLen` bytes pointed to by `data`.

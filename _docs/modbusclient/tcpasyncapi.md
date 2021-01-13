@@ -8,17 +8,17 @@ parent: ModbusClient
 ---
 
 # ModbusClientTCPasync API elements
-You will have to include one of these lines in your code to make the `ModbusClientTCPasync` API available:
+You will have to include the following line in your code to make the `ModbusClientTCPasync` API available:
 
 ```cpp
 #include "ModbusclientTCPasync.h"
 ```
 
 ## `ModbusClientTCPasync(IPAddress host, uint16_t port)` and<br> `ModbusClientTCPasync(IPAddress host, uint16_t port, uint16_t queueLimit)`
-The asynchronous version takes 3 arguments: the target host IP address and port number of the modbus server and an optionally queue size limit (defaults to 100). The async version connects to one modbus server.
+The asynchronous TCP version takes 2 or 3 arguments: the target host IP address and port number of the Modbus server and an optional queue size limit (defaults to 100). The async version will connect to exactly one Modbus server.
 
 ## `void setTimeout(uint32_t timeout)`
-Similar to the ModbusClientRTU timeout, you may specify a time in milliseconds that will determine if a `TIMEOUT` error occurred. The worker task will wait the specified time without data arriving to then state a timeout and return the error response for it.
+Similar to the ModbusClientRTU and ModbusClientTCP timeouts, you may specify a time in milliseconds that will determine if a `TIMEOUT` error occurred. The worker task will wait the specified time without data arriving to then state a timeout and return the error response for it.
 
 ### In detail
 Every 500msec, only the oldest request is checked for a possible timeout. 
@@ -42,4 +42,4 @@ If no data has been received from the server after the idle timeout, the client 
 Mind that the client will only reset the idle timeout timer upon data reception and not when sending.
 
 ## `void setMaxInflightRequests(uint32_t maxInflightRequests)`
-Sets the maximum number of messages that are sent to the server at once. The async modbus client sends all the requests to the server without waiting for an earlier request to receive a response. This can result in message loss because the server could has a limited queue. Setting this number to 1 mimics a sync client.
+Sets the maximum number of messages that are sent to the server at once. The async modbus client sends all the requests to the server without waiting for an earlier request to receive a response. This is depending on the receiving server's ability to cope with multiple requests and can result in message loss if the server has a limited queue only. Setting this number to 1 mimics a sync client.
