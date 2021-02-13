@@ -34,10 +34,10 @@ You can avoid the 500msec delay by connecting manually.
 
 Disconnecting is also automatic (see `void setIdleTimeout(uint32_t timeout)`). Likewise, you can disconnect manually.
 
-## ``void connect(IPAddress host, uint16_t port)``
+## ``void connect(IPAddress host)`` and <br> ``void connect(IPAddress host, uint16_t port)``
 Another flavour of the ``connect()`` call, allowing you to address another Modbus server host. Any existing connection is closed before connecting to the given host. The internal default host is also switched to the new one, so any subsequent ``connect()``, ``disconnect()`` etc. will be applied to the new host.
 
-Please note that the port may be omitted and defaults to 502 (standard Modbus port) unless you specify another one.
+The port may be omitted and defaults to 502 (standard Modbus port) unless you specify another one.
 
 ## `void setIdleTimeout(uint32_t timeout)`
 Sets the time after which the client closes the TCP connection to the server.
