@@ -27,6 +27,12 @@ Note
 {: .px-8 }
 While the queue holds pointers to the requests only, the requests need memory as well. If you choose a `queueLimit` too large, you may encounter "out of memory" conditions!
 
+## `ModbusClientRTU(HardwareSerial& serial, RTScallback func)` and<br> `ModbusClientRTU(HardwareSerial& serial, RTScallback func, uint16_t queueLimit)`
+These are the alternative constructor variants for an instance of the `ModbusClientRTU` type. The parameters are:
+- `serial`: a reference to a Serial interface the Modbus is conncted to (mostly by a RS485 adaptor). This Serial interface must be configured to match the baud rate, data and stop bits and parity of the Modbus.
+- `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
+- `queueLimit`: this specifies the number of requests that may be placed on the worker task's queue. If the queue has reached this limit, the next `addRequest` call will return a `REQUEST_QUEUE_FULL` error. The default value built in is 100.
+
 ## `void setTimeout(uint32_t TOV)`
 This call lets you define the time for stating a response timeout. `TOV` is defined in **milliseconds**. When the worker task is waiting for a response from a server, and the specified number of milliseconds has passed without data arriving, it will return a `TIMEOUT` error response.
 
