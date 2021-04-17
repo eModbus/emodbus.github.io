@@ -20,6 +20,12 @@ The first parameter, `serial` is mandatory, as it gives the serial interface use
 A value of `20000` (20 seconds) is reasonable.
 The third (optional) parameter `rtsPin` is the same as for the RTU Modbus client described above - if you are using a RS485 adaptor requiring a DE/RE line to be maintained, `rtsPin` should be the GPIO number of the wire to that DE/RE line. The library will take care of toggling the pin.
 
+## `ModbusServerRTU(HardwareSerial& serial, uint32_t timeout, RTScallback func)`
+The first parameter, `serial` is mandatory, as it gives the serial interface used to connect to the RTU Modbus to the server.
+`timeout` is less important as it is for TCP. It defines after what time of inactivity the server should loop around and re-initialize some working data.
+A value of `20000` (20 seconds) is reasonable.
+- `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
+
 ## `bool start()` and<br> `bool start(int coreID)`
 With `start()` the server will create its background task and start listening to the Modbus. 
 The optional parameter `coreID` may be used to have that background task run on the named core for multi-core MCUs.
