@@ -34,7 +34,7 @@ Note
 This is a value common for all servers connected, so choose the value sensibly to cover all normal response times of the servers. 
 Else you will be losing responses from those servers taking longer to respond. Their responses will be dropped unread if arriving after the bridge's timeout had struck.
 
-## `ModbusBridge(HardwareSerial& serial, uint32_t timeout)`,<br> `ModbusBridge(HardwareSerial& serial, uint32_t timeout, uint32_t TOV)` and<br> `ModbusBridge(HardwareSerial& serial, uint32_t timeout, uint32_t TOV, int rtsPin)`
+## `ModbusBridge(HardwareSerial& serial, uint32_t timeout)`,<br> `ModbusBridge(HardwareSerial& serial, uint32_t timeout, uint32_t TOV)`, <br> `ModbusBridge(HardwareSerial& serial, uint32_t timeout, uint32_t TOV, int rtsPin)`, <br>`ModbusBridge(HardwareSerial& serial, uint32_t timeout, RTScallback func)` and <br>`ModbusBridge(HardwareSerial& serial, uint32_t timeout, RTScallback func, uint32_t TOV)`
 The corresponding constructors for the RTU bridge variant. With the exception of `TOV` all parameters are those of the underlying RTU server.
 The duplicity of `timeout` and `TOV` may look irritating at the first moment, but while `timeout` denotes the timeout the bridge will use when waiting for messages as a _server_, the `TOV` value is the _bridge_ timeout as described above.
 
