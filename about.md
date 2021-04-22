@@ -8,3 +8,5 @@ permalink: /
 
 # About eModbus
 
+Release 1.1
+
