@@ -23,20 +23,11 @@ You will have to include the matching header file in your code for the bridge ty
 
 Note that there currently is no AsyncTCP bridge (yet), due to differences in internal implementations.
 
-## `ModbusBridge()` and<br> `ModbusBridge(uint32_t TOV)`
-These are the constructors for a TCP-based bridge. The optional `TOV` (="timeout value") parameter sets the maximum time the bridge will wait for the responses from external servers. The default value for this is 10000 - 10 seconds.
+## `ModbusBridge`
+This is the constructor for a TCP-based bridge.
 
-{: .ml-8 }
-Note
-{: .label .label-yellow}
-
-{: .px-8 }
-This is a value common for all servers connected, so choose the value sensibly to cover all normal response times of the servers. 
-Else you will be losing responses from those servers taking longer to respond. Their responses will be dropped unread if arriving after the bridge's timeout had struck.
-
-## `ModbusBridge(HardwareSerial& serial, uint32_t timeout)`,<br> `ModbusBridge(HardwareSerial& serial, uint32_t timeout, uint32_t TOV)`, <br> `ModbusBridge(HardwareSerial& serial, uint32_t timeout, uint32_t TOV, int rtsPin)`, <br>`ModbusBridge(HardwareSerial& serial, uint32_t timeout, RTScallback func)` and <br>`ModbusBridge(HardwareSerial& serial, uint32_t timeout, RTScallback func, uint32_t TOV)`
-The corresponding constructors for the RTU bridge variant. With the exception of `TOV` all parameters are those of the underlying RTU server.
-The duplicity of `timeout` and `TOV` may look irritating at the first moment, but while `timeout` denotes the timeout the bridge will use when waiting for messages as a _server_, the `TOV` value is the _bridge_ timeout as described above.
+## `ModbusBridge(HardwareSerial& serial, uint32_t timeout)`, <br> `ModbusBridge(HardwareSerial& serial, uint32_t timeout, int rtsPin)` and <br>`ModbusBridge(HardwareSerial& serial, uint32_t timeout, RTScallback func)`
+The corresponding constructors for the RTU bridge variant. All parameters are those of the underlying RTU server.
 
 ## `bool attachServer(uint8_t aliasID, uint8_t serverID, uint8_t functionCode, ModbusClient *client)` and<br> `bool attachServer(uint8_t aliasID, uint8_t serverID, uint8_t functionCode, ModbusClient *client, IPAddress host, uint16_t port)`
 These calls are used to bind `ModbusClient`s to the bridge. 
