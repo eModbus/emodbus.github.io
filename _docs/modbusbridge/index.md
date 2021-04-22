@@ -25,7 +25,7 @@ First you will have to include the matching header file for the type of bridge y
 ```
 Next the bridge needs to be defined:
 ```cpp
-ModbusBridgeEthernet MBbridge(5000);
+ModbusBridgeEthernet MBbridge;
 ```
 We will need at least one `ModbusClient` for the bridge to contact external servers:
 ```cpp
