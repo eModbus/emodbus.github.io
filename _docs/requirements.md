@@ -29,3 +29,5 @@ The async versions are also usable on ESP8266
 For Modbus RTU you will need a RS485-to-Serial adaptor. Commonly used are the RS485MAX adaptors or the XY-017 adaptors with automatic half duplex control. Be sure to check compatibility of voltage levels.
 
 Modbus TCP will require either an Ethernet module like the WizNet W5xxx series connected to the SPI interface or an (internal or external) WiFi adaptor. The client library is by the way using the functions defined in Client.h only, whereas the server and bridge library is requiring either Ethernet.h or Wifi.h internally. Async versions rely on the AsyncTCP library.
+
+The Linux client does provide ``Client`` and ``IPAddress`` classes to supply the Arduino-style requirements, but is restricted to TCP.

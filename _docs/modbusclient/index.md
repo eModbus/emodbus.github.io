@@ -75,4 +75,4 @@ Error err = RS485.addRequest(0x12345678, 1, READ_HOLD_REGISTER, 10, 1);
 ```
 
 This method enqueues your request and returns immediately. If anything was wrong with your parameters or the queue was full, the request will not be created. You will be given an error return value to find out what went wrong.
-In case everything was okay, the request is created and put into the background queue to be processed. Upon response, your `onData` or `onError` callbacks will be called.
+In case everything was okay, the request is created and put into the background queue to be processed. Upon response, your `handleData` or `handleError` callbacks will be called.
