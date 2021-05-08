@@ -76,10 +76,12 @@ Each request that got successfully enqueued is counted. By calling `getMessageCo
 
 Please note that this count is instance-specific, so each ModbusClient instance you created will have its own count.
 
-## `void begin()` and<br> `void begin(int coreID)`
+## `void begin()`, <br> `void begin(int coreID)` and <br> `void begin(int coreID, uint8_t factor)` (RTU only)
 This is the most important call to get a ModbusClient instance to work. It will open the request queue and start the background worker task to process the queued requests.
 
-The second form of `begin()` allows you to choose a CPU core for the worker task to run (only on multi-core systems like the ESP32). This is advisable in particular for the `ModbusClientRTU` client, as the handling of the RS485 Modbus is a time-critical and will profit from having its own core to run.
+The second form of `begin()` allows you to choose a CPU core for the worker task to run (only on multi-core systems like the ESP32). This is **highly recommended** in particular for the `ModbusClientRTU` client, as the handling of the RS485 Modbus is a time-critical and will profit from having its own core to run.
+
+The third form adds a way to stretch the allowable time between messages to detect an end-of-message state. This may be useful for slow reacting servers, but be aware that this is a violation of the Modbus standard, strictly speaking!
 
 {: .ml-8 }
 Note
