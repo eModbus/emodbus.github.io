@@ -57,7 +57,7 @@ This is a character array containing ``1`` and ``0`` characters in the order of 
 **Please note**: coils are numbered starting with 0, as usually done in C++ arrays!
 
 Bit image arrays may contain other characters to give visible structure that will be ignored, like spaces ``"1111 0000 1010 1101"``, or even comments: ``"pump A=1, pump B=0, vent 34=1"``.
-If you need to include one of ``1`` or ``0`` as commentary that must not be interbreted as coil value, you must prefix it with ``_`` (underscore).
+If you need to include one of ``1`` or ``0`` as commentary that must not be interpreted as coil value, you must prefix it with ``_`` (underscore).
 A bit image array of ``"We have _16 coils here: 0101 1100 1110 0111"`` correctly will generate 16 coils, despite of the (escaped) ``1`` from ``16``!
 
 ### Assignment
