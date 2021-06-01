@@ -22,22 +22,26 @@ Unfortunately the Modbus specification and the C++ data type have some deficits 
 To cope with these shortcomings the ``CoilData`` type was added to **eModbus**.
 
 ### *Usage notes* 
+
 - There is no obligation to use the ``CoilData`` type with eModbus at all. If you prefer you may use your own representation of coils any time.
 - The current implementation is a beta version only. While it has been tested thoroughly, it surely will have bugs!
 - internal code is currently focused on functionality, not speed. There will be changes in the future to improve performance.
 
 ### ``CoilData`` interface
+
 #### Constructors ``CoilData()``, ``CoilData(uint16_t size)`` and ``CoilData(uint16_t size, bool initValue)``
+
 A ``CoilData`` object constructed without any parameters will have a coil capacity of 0. 
 The capacity can only be changed by assigning another ``CoilData`` object or a "bit image array" (see below).
 
 The second constructor is the regular one, it will make room for the given number of coils internally. 
-Please note that this size is limited to 2000 coils by the Modbus standard (due to the capacity of a standard MOdbus message that can be as long as 255 bytes only).
+Please note that this size is limited to 2000 coils by the Modbus standard (due to the capacity of a standard Modbus message that can be as long as 255 bytes only).
 
 The third form allows you to specify the value all freshly created coils are preset: if ``initValue`` is ``true``, all coils will get an ``1`` value. 
 If left out, or set to ``false``, the coils will be initialized with ``0``.
 
 #### Bit image array constructor ``CoilData(const char *initVector)``
+
 You may alternatively specify the size and initial value of the ``CoilData`` object by a *bit image array*.
 This is a character array containing ``1`` and ``0`` characters in the order of the coils in the set.
 ``"11110000"`` for instance is an 8-coil bit image array that, when used in the constructor, will allocate space for 8 coils in the object and init these with the given ``1`` and ``0`` values in order:
@@ -57,6 +61,7 @@ If you need to include one of ``1`` or ``0`` as commentary that must not be inte
 A bit image array of ``"We have _16 coils here: 0101 1100 1110 0111"`` correctly will generate 16 coils, despite of the (escaped) ``1`` from ``16``!
 
 #### Assignment
+
 ``CoilData`` objects may be assigned safely to each other. 
 The source object will completely replace the former data in the target, source and target will be identical afterwards.
 
@@ -71,6 +76,7 @@ c = "0101 1111 0000 1010";
 will make ``c`` 16 coils wide and init these as defined in the array.
 
 #### Comparison operators
+
 The equality (``==``) and inequality (``!=``) comparison operators are supported to compare ``CoilData`` objects with another ``CoilData`` object or with a bit image array.
 ```
 CoilData c("11100");
@@ -83,14 +89,17 @@ if (d != "11111111"); // false!
 ```
 
 #### Type conversion
+
 There are two type conversion operators for ``CoilData``:
 - ``bool``: if used in a ``bool`` context, the object will evaluate to ``true`` if there are any coils defined. Hence an empty ``CoilData`` will return ``false`` instead.
 - ``vector<uint8_t>``: if assigned to a ``std::vector<uint8_t>`` object, the ``CoilData`` object will return its data content as a vector of bytes in the order the coils are represented internally.
 
 #### (Re-)init complete coil set to 1 or 0, ``void init()`` and ``void init(bool value)``
+
 Using the ``init()`` call, all coils (if any) in the ``CoilData`` object will be set to ``0`` or ``1``, if the ``value`` parameter is given as ``true``.
 
 #### Information on the ``CoilData`` object
+
 These calls will return the value of internal parameters of an object:
 - ``uint16_t coils()`` will return the coil capacity of the object.
 - ``bool empty()`` is ``true``, if there are no coils in the object and ``false`` else.
@@ -109,6 +118,7 @@ These calls will return the value of internal parameters of an object:
   bool operator[](uint16_t index) const;
 
 #### Changing coil values
+
   // Set functions to change coil value(s)
   // Will return true if done, false if impossible (wrong address or data)
 
@@ -130,6 +140,7 @@ These calls will return the value of internal parameters of an object:
   bool set(uint16_t index, const char *initVector);
 
 #### Debug helper
+
 #if !ISLINUX
   // Helper function to dump out coils in logical order
   void print(const char *label, Print& s);
