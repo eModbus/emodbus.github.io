@@ -109,13 +109,20 @@ These calls will return the value of internal parameters of an object:
 
 ### Reading coil values
 
+#### ``bool operator[](uint16_t index)``
+
+The array element operator ``[]`` can be used to read the value of a single coil.
+The ``index`` must be within the coils in the ``CoilData`` object - else, ``false`` will be returned.
+Due to the lack of individual addressability of a ``bool`` packed in bytes, this operator is **read-only**.
+To set any coil to another value, see [Changing coil values](#changing-coil-values) below.
+
+**Please note again**: coil numbering starts at 0, the highest possible coil number is the coils size of the object - 1.
+
+
 // slice: return a new CoilData object with coils shifted leftmost
   // will return empty set if illegal parameters are detected
   // Default start is first coil, default length all to the end
   CoilData slice(uint16_t start = 0, uint16_t length = 0);
-
-  // operator[]: return value of a single coil
-  bool operator[](uint16_t index) const;
 
 ### Changing coil values
 
