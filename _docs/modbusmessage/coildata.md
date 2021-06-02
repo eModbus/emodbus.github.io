@@ -118,11 +118,20 @@ To set any coil to another value, see [Changing coil values](#changing-coil-valu
 
 **Please note again**: coil numbering starts at 0, the highest possible coil number is the coils size of the object - 1.
 
+#### ``CoilData slice(uint16_t start, uint16_t length)``, <br>``CoilData slice(uint16_t start)`` and <br>``CoilData slice()``
 
-// slice: return a new CoilData object with coils shifted leftmost
-  // will return empty set if illegal parameters are detected
-  // Default start is first coil, default length all to the end
-  CoilData slice(uint16_t start = 0, uint16_t length = 0);
+A "slice" is part of or a complete ``CoilData`` object as another ``CoilData`` object, i.e. a copy.
+The first form of ``slice()`` takes the first coil number to start at and the number of coils to copy, the second, omitting the number of coils, will return all coils from the start to the end of the source ``CoilData``.
+The last variety will copy the complete source coil set.
+
+As slices are ``CoilData`` themselves, all functions of ``CoilData`` can be applied to a slice. 
+```
+uint16_t numberOfSetCoilsInSlice = myCoils.slice(4,7).coilsSetON(); // return all coils set to on within coils #4 to #10
+myCoils.slice(1,8) = "11011100"; // will in fact work, but is senseless, because the copy is thrown away afterwards!
+```
+Slices are handy to respond with coil values to a Modbus request. Please refer to the TCPcoilsExample in the ``examples`` code directory to see an application.
+
+If the ``start`` parameter is out-of-bounds of the ``CoilData`` object, or the ``length`` would exceed the maximum coil number, an empty ``CoilData`` object will be returned.
 
 ### Changing coil values
 
