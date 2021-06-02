@@ -101,11 +101,16 @@ Using the ``init()`` call, all coils (if any) in the ``CoilData`` object will be
 ### Information on the ``CoilData`` object
 
 These calls will return the value of internal parameters of an object:
-#### ``uint16_t coils()`` will return the coil capacity of the object.
-#### ``bool empty()`` is ``true``, if there are no coils in the object and ``false`` else.
-#### ``uint8_t size()`` gives the size of the internal buffer in number of bytes; in combination with
-#### ``uint8_t *data()`` returning a pointer to the internal buffer, these may be used to use the coil data in classic ``uint8_t`` array manner.
-#### ``uint16_t coilsSetON()`` and``uint16_t coilsSetOFF()`` will return the number of coils in the object that are set to ``1`` or ``0``, respectively.
+#### ``uint16_t coils()`` 
+will return the coil capacity of the object.
+#### ``bool empty()`` 
+is ``true``, if there are no coils in the object and ``false`` else.
+#### ``uint8_t size()`` 
+gives the size of the internal buffer in number of bytes; in combination with
+#### ``uint8_t *data()`` 
+returning a pointer to the internal buffer, these may be used to use the coil data in classic ``uint8_t`` array manner.
+#### ``uint16_t coilsSetON()`` and``uint16_t coilsSetOFF()`` 
+will return the number of coils in the object that are set to ``1`` or ``0``, respectively.
 
 ### Reading coil values
 
