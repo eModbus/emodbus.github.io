@@ -26,9 +26,11 @@ The first parameter, `serial` is mandatory, as it gives the serial interface use
 A value of `20000` (20 seconds) is reasonable.
 - `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
 
-## `bool start()` and<br> `bool start(int coreID)`
+## `bool start()`,<br> `bool start(int coreID)` and <br>``bool start(int coreID, uint32_t interval)``
 With `start()` the server will create its background task and start listening to the Modbus. 
-The optional parameter `coreID` may be used to have that background task run on the named core for multi-core MCUs.
+The optional parameter `coreID` may be used to have that background task run on the named core for multi-core MCUs. Default for ``coreID`` is -1, in which case the system will pick the core for its own rules.
+The third form allows to specify the minimum waiting time after a message has been received to state end-of-message. 
+This helps relaxing the tight timings the Modbus RTU standard requires and may help with slower servers, but strictly speaking is a violation of the Modbus RTU standard.
 
 ## `bool stop()`
 The server background process can be stopped and the task be deleted with the `stop()` call. You may start it again with another `start()` afterwards.
