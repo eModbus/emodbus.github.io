@@ -135,29 +135,65 @@ If the ``start`` parameter is out-of-bounds of the ``CoilData`` object, or the `
 
 ### Changing coil values
 
-  // Set functions to change coil value(s)
-  // Will return true if done, false if impossible (wrong address or data)
+Coil values are altered by the ``set()`` group of calls. 
+Besides the basic change of a single coil value, various sources can be used to set one or many coils to new values at once.
+If start indexes, lengths or other data attributes are wrong in respect of the ``CoilData`` object they are applied to, the ``set()`` operation will fail and return ``false``.
+If the change was successful, the return value will be ``true`` instead.
 
-  // set #1: alter one single coil
-  bool set(uint16_t index, bool value);
+#### ``bool set(uint16_t index, bool value)``
 
-  // set #2: alter a group of coils, overwriting it by the bits from newValue
-  bool set(uint16_t index, uint16_t length, vector<uint8_t> newValue);
+This very basic ``set`` will write the given ``value`` into the coil pointed to by ``index``.
 
-  // set #3: alter a group of coils, overwriting it by the bits from unit8_t buffer newValue
-  bool set(uint16_t index, uint16_t length, uint8_t *newValue);
+#### ``bool set(uint16_t index, uint16_t length, vector<uint8_t> newValue)``
 
-  // set #4: alter a group of coils, overwriting it by the coils in another CoilData object
-  // Setting stops when either target storage or source coils are exhausted
-  bool set(uint16_t index, const CoilData& c);
+The ``vector<uint8_t>`` is used as a source for coil values in the sequence of bits in the bytes of the vector.
+So the coil with number ``index`` is set to bit 0 of the first byte of the vector, coil ``index+1`` is set to bit 1 of the same byte and so on, until ``length`` coils are set.
+If the vector contains to few bytes to cover all coils, the operation will fail.
 
-  // set #5: alter a group of coils, overwriting it by a bit image array
-  // Setting stops when either target storage or source bits are exhausted
-  bool set(uint16_t index, const char *initVector);
+#### ``bool set(uint16_t index, uint16_t length, uint8_t *newValue)``
+
+Similar to the preceeding call, this will change several coils in a row.
+The values are taken from the bits of the bytes in ``newValue`` in order.
+
+**Please note**: as there is no "natural" end mark for the ``newValue`` pointer, erroneous values for length may result in data being used as coil values that is off the area one might have intended! So better doublecheck if your pointer and lengths are correct.
+
+This ``set()`` variant is useful to change ``CoilData`` by values read from a Modbus message, f.i. coming with a 0x0F "WRITE_MULT_COILS" request.
+
+#### ``bool set(uint16_t index, const CoilData& c)``
+
+This call will write the coils from the given ``CoilData`` object ``c`` into the target, starting at coil number ``index``. 
+The coils in ``c`` will be taken from #0 on.
+Contrary to the two calls described before, here the copy will be made regardless of the sizes of the two ``CoilData`` objects involved:
+- if the source is larger than the available target space, the copy will stop at the very last coil in the target.
+- a source coil set shorter than the available target space will be copied completely, the remaining target coils are left untouched.
+- if the source is an empty ``CoilData``, nothing will be altered.
+
+```
+CoilData A("1111 1111 1111 1111");
+CoilData B("0011 0011");
+A.set(8, B);    // A is "1111 1111 0011 0011" now!
+B.set(4, A);    // B is "0011 1111" now
+```
+
+#### ``bool set(uint16_t index, const char *initVector)``
+
+This final ``set()`` is similar to the previous, with the exception that the new coil values here are taken from a bit image array as described above.
+The same rules apply, though: too long arrays will be copied up to the last fitting value only, shorter ones will leave the remainder unchanged.
 
 ### Debug helper
 
-#if !ISLINUX
-  // Helper function to dump out coils in logical order
-  void print(const char *label, Print& s);
-#endif
+Sometimes it is difficult to see from hex dumps or plain number output what the values of a given coil set are. 
+There is a helper function that will print out all coils of a ``CoilData`` object in a nicely (well, sort of...) formatted way.
+
+#### ``void print(const char *label, Print& s)``
+
+The ``label`` may be chosen as you like and is printed initally before the values.
+The ``s`` reference shall point to a ``Print`` type object - this mostly will be ``Serial`` for the standard monitor output.
+Output will look like seen below. 
+The ``Coil index`` lines have been added here for explanation only, the ``myCoils.print("Initial coil state", Serial);`` used here is responsible for the last line only:
+```
+Coil index          0    4    8    12   16   20   24   28   32       
+                    |    |    |    |    |    |    |    |    |        
+Initial coil state: 0001 0111 0000 0110 0000 0000 0000 1011 010      
+```
+**Please note**: this function is not available with Linux, as there is no such concept as ``Print``, that is part of the Arduino environment only!
