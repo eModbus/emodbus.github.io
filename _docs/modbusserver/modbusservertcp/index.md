@@ -23,7 +23,11 @@ The WiFi server does not rely on external libraries. If using Ethernet or AsyncT
 ### Constructor
 A ModbusServerTCP is defined by
 ```
-ModbusServerTCP myServer;
+ModbusServerWiFi myServer;
+```
+or
+```
+ModbusServerEthernet myServer;
 ```
 or
 ```
