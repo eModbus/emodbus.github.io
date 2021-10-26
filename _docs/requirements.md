@@ -36,4 +36,4 @@ The Linux client does provide ``Client`` and ``IPAddress`` classes to supply the
 
 This library is independed of the actual communication standard used by the hardware. Modbus typically uses RS-485 for it's RTU implementation. This lib implements RTU half-duplex mode. To use RTU with an ESP32 you need to have an UART to RS-485 converter. The library provides a function to toggle the direction pin (/RE - DE) in case your adapter doesn't have auto-direction control.
 
-A word of caution when implementing RS-485. Some converter chips do no have bus line balancing so it relies on external components. This can be easily achieved with resistors though. See this discussion for an example implementation: https://github.com/eModbus/eModbus/discussions/112
+A word of caution when implementing RS-485. Some converter chips do no have bus line balancing so it relies on external components. This can be easily achieved with resistors though. See this discussion for an example implementation: [Example application with hardware](https://github.com/eModbus/eModbus/discussions/112)
