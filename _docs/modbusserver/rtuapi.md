@@ -35,3 +35,20 @@ This helps relaxing the tight timings the Modbus RTU standard requires and may h
 ## `bool stop()`
 The server background process can be stopped and the task be deleted with the `stop()` call. You may start it again with another `start()` afterwards.
 In fact a `start()` to an already running server will stop and then restart it.
+
+## `void useModbusASCII()` and `void useModbusASCII(unsigned long timeout)`
+If you are going to use the Modbus ASCII protocol, you may switch the RTU server to ASCII mode by these calls. In ASCII mode all messages are encoded as a sequence of human-readable ASCII characters.
+The first character always is a colon ``:``, the last two characters of a message always are  ``\r\n`` (CRLF), as the Modbus specs require it.
+All message bytes are sent as their hexadecimal representations, followed by a LRC checksum.
+
+**Note:** everything else is identical to Modbus RTU, so your code will remain the same with the exception of this very call.
+
+The optional `timeout`parameter allows to alter the standard 1s timeout the specs describe. This may help speeding up communications if all your servers are supporting the shorter timings.
+
+## `void useModbusRTU()`
+This call will switch off a previously set ASCII mode and return to RTU mode. 
+
+**Note:** this will **NOT** reinstate the previously given RTU timeout! You may to have to set it again with ``setTimeout(unsigned long timeout)`` instead.
+
+## `bool isModbusASCII()`
+This call is to report back if the ASCII mode currently is active (`true`) or RTU mode is selected (`false`).
