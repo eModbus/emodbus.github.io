@@ -27,6 +27,22 @@ Note
 {: .px-8 }
 While the queue holds pointers to the requests only, the requests need memory as well. If you choose a `queueLimit` too large, you may encounter "out of memory" conditions!
 
+## `void useModbusASCII()` and `void useModbusASCII(unsigned long timeout)`
+If you are going to use the Modbus ASCII protocol, you may switch the RTU client to ASCII mode by these calls. In ASCII mode all messages are encoded as a sequence of human-readable ASCII characters.
+The first character always is a colon ``:``, the last two characters of a message always are  ``\r\n`` (CRLF), as the Modbus specs require it.
+All message bytes are sent as their hexadecimal representations, followed by a LRC checksum.
+
+**Note:** everything else is identical to Modbus RTU, so your code will remain the same with the exception of this very call.
+
+The optional `timeout`parameter allows to alter the standard 1s timeout the specs describe. This may help speeding up communications if all your servers are supporting the shorter timings.
+
+## `void useModbusRTU()`
+This call will switch off a previously set ASCII mode and return to RTU mode. 
+
+**Note:** this will **NOT** reinstate the previously given RTU timeout! You may to have to set it again with ``setTimeout(unsigned long timeout)`` instead.
+
+## `bool isModbusASCII()`
+This call is to report back if the ASCII mode currently is active (`true`) or RTU mode is selected (`false`).
 ## `ModbusClientRTU(HardwareSerial& serial, RTScallback func)` and<br> `ModbusClientRTU(HardwareSerial& serial, RTScallback func, uint16_t queueLimit)`
 These are the alternative constructor variants for an instance of the `ModbusClientRTU` type. The parameters are:
 - `serial`: a reference to a Serial interface the Modbus is conncted to (mostly by a RS485 adaptor). This Serial interface must be configured to match the baud rate, data and stop bits and parity of the Modbus.
