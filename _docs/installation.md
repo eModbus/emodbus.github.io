@@ -26,4 +26,4 @@ lib_deps =
 If you are using the Arduino IDE, you will want to copy the library folder into your library directory. In Windows this will be `C:\Users\<user_name>\Documents\Arduino\libraries` normally. For Arduino IDE you'll have to install the library dependencies manually. These are:
 
   - [AsyncTCP](https://github.com/me-no-dev/AsyncTCP)
-  - An Ethernet.h-compatible library (example: https://github.com/maxgerhardt/Ethernet)
+  - An Ethernet.h-compatible library (example: https://github.com/maxgerhardt/Ethernet). Note that the standard ``Ethernet.h`` in the arduino-esp32 core will **NOT WORK** due to internal inconsistencies in the core.
