@@ -10,7 +10,7 @@ permalink: /
 
 *valid for Release 1.2*
 
-This is a library to provide Modbus client (formerly known as master), server (formerly slave) and bridge/gateway functionalities for both Modbus RTU and TCP protocols.
+This is a library to provide Modbus client (formerly known as master), server (formerly slave) and bridge/gateway functionalities for  Modbus RTU, ASCII and TCP protocols.
 
 Modbus communication is done in separate tasks, so Modbus requests and responses are non-blocking. Callbacks are provided to prepare or receive the responses asynchronously.
 
@@ -21,7 +21,7 @@ Key features:
  - non blocking / asynchronous API
  - alternative synchronous API
  - server, client and bridge modes
- - TCP (Ethernet, WiFi and Async) and RTU interfaces
+ - TCP (Ethernet, WiFi and Async) and RTU and ASCII (serial) interfaces
  - designed for ESP32, various interfaces supported; async versions run also on ESP8266. Client code for Linux available.
  - all common and user-defined Modbus standard function codes
 
