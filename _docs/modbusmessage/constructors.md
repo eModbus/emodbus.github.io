@@ -118,3 +118,40 @@ remaining -= addValue(buffer + 24 - remaining, remaining, l);
 ```
 
 After the above code is run `buffer` will contain `04 04 FC DE AD BE EF` and `remaining` will be 17.
+
+## Using "illegal" function codes
+
+Normally all function codes that are valid to be used are defined in the Modbus standard.
+These are the codes that the library will support, all others are strictly speaking "illegal".
+There are devices, though, that will make use of the illegal codes for whatever reasons.
+To be able to cope with these deviations the library has a way to open a previously illegal code for an application.
+
+### Function code type
+
+Every function code in the library has a certain type. These types are:
+- ``FC01_TYPE``: Two uint16_t parameters (FC 0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
+- ``FC07_TYPE``: no additional parameter (FCs 0x07, 0x0b, 0x0c, 0x11)
+- ``FC0F_TYPE``: two uint16_t parameters, a uint8_t length byte and a uint16_t* pointer to array of bytes (FC 0x0f)
+- ``FC10_TYPE``: two uint16_t parameters, a uint8_t length byte and a uint8_t* pointer to array of words (FC 0x10)
+- ``FC16_TYPE``: three uint16_t parameters (FC 0x16)
+- ``FC18_TYPE``: one uint16_t parameter (FC 0x18)
+- ``FCGENERIC``: for FCs not yet explicitly coded (or too complex)
+- ``FCUSER``: No checks except the server ID
+- ``FCILLEGAL``: not allowed function codes
+
+Note the last type, ``FCILLEGAL``. This is given by default to all codes not known to the Modbus standard.
+Only those function codes may be 'opened' to be used.
+There is no way to redefine standard codes or even do a second redefinition of an already redefined code.
+The type does control which check and create functions are applicable to the function code.
+If you will select ``FC01_TYPE`` for instance, messages with this function code will have to adhere to the same regulations as function codes 0x01, 0x02 etc., like two 16-bit parameters.
+Using ``FCUSER`` will let you use the code without such restrictions (but also without the appropriate error checks).
+
+The call to do the redefinition is
+
+### ``const FCType FCT::redefineType(uint8_t functionCode, const FCType type);``
+
+The call is a method of the static FCT class holding all function codes and their types, so the ``FCT::`` prefix _must_ be used.
+The new ``type`` must be one of the types listed above. If none is given, the type will be set to ``FCUSER`` by default.
+
+The call will return the effective type for the given ``functionCode`` after the call. If it is identical to the one you provided, the call was successful.
+
