@@ -72,3 +72,10 @@ This call will switch off a previously set ASCII mode and return to RTU mode.
 
 ## `bool isModbusASCII()`
 This call is to report back if the ASCII mode currently is active (`true`) or RTU mode is selected (`false`).
+
+## `void skipLeading0x00(bool onOff = true);`
+Some RTU bus setups have unresolvable issues with sporadic 'ghost' 0x00 bytes created within the electronics that have no logical representation at all.
+The ``skipLeading0x00()`` call allows to have these bytes droped internally, if these are received in front of a proper message.
+
+**Note:** this is a work-around only to cure a symptom and does not fix the issue. It always pays to try to fix the root cause!
+
