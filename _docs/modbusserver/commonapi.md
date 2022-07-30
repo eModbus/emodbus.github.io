@@ -58,6 +58,11 @@ Note
 {: .px-8 }
 Do not use the first byte of your `ModbusMessage` as `0xFF`, followed by one of `0xF0` or `0xF1`, as these are used internally for `NIL_RESPONSE` and `ECHO_RESPONSE`!
 
+## `bool unregisterWorker(uint8_t serverID)` and `bool unregisterWorker(uint8_t serverID, uint8_t functionCode)`
+A user's request was to be able to drop again previously registered function code callbacks. The application was to have freshly initialized devices react on a proprietary server ID to accept their 'real' server ID with a request. Then the callback for the initial server ID needs to be dropped.
+
+This call allows you to do exactly that - discarding the callbacks for a given server ID/function code combination or for a server ID alltogether (removing all function code callbacks that may exist for that server ID).
+
 ## `uint16_t getValue(uint8_t *source, uint16_t sourceLength, T &v)`
 Although you will be using `ModbusMessage`'s `get()` function most of the time, there is a complement to the `addValue()` service function described in the ModbusClient section.
 `getValue()` will help you reading MSB-first data from an arbitrary data buffer.
