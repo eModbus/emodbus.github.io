@@ -8,7 +8,7 @@ permalink: /
 
 # eModbus
 
-*valid for Release 1.5*
+*valid for Release 1.6*
 
 This is a library to provide Modbus client (formerly known as master), server (formerly slave) and bridge/gateway functionalities for  Modbus RTU, ASCII and TCP protocols.
 
