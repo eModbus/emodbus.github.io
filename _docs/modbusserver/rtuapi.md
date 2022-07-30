@@ -53,8 +53,20 @@ This call will switch off a previously set ASCII mode and return to RTU mode.
 ## `bool isModbusASCII()`
 This call is to report back if the ASCII mode currently is active (`true`) or RTU mode is selected (`false`).
 
-## `void skipLeading0x00(bool onOff = true);`
+## `void skipLeading0x00(bool onOff = true)`
 Some RTU bus setups have unresolvable issues with sporadic 'ghost' 0x00 bytes created within the electronics that have no logical representation at all.
 The ``skipLeading0x00()`` call allows to have these bytes droped internally, if these are received in front of a proper message.
 
 **Note:** this is a work-around only to cure a symptom and does not fix the issue. It always pays to try to fix the root cause!
+
+## `void registerBroadcastWorker(MSRlistener worker)`
+As a speciality for Modbus RTU, a non-standard 'broadcast' request is supported by a number of devices. This request will start with the normally illegal server ID 0. Any server accepting broadcast requests shall read it, but never send a response on it.
+
+The `registerBroadcastWorker` call is used to register a special server callback for broadcast requests. 
+The callback has a function signature of type `MSRlistener`: `void worker(ModbusMessage msg)`. It will be given the broadcast request as `msg`, but may not return a thing.
+
+## `void registerSniffer(MSRlistener worker)`
+Even more special, the 'Sniffer' callback is used to examine any message that is sent on the RTU bus, regardless of request or response.
+The callback's signature is the same `MSRlistener` type as for the broadcast callback.
+
+Using a server as a sniffer will disable all previously defined function code callbacks for that server, as no distinction is made any more on server IDs or function codes. Each and any message is given to the callback to be processed as you like.
