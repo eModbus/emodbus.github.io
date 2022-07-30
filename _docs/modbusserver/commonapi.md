@@ -81,6 +81,12 @@ You may check if a given serverID/functionCode combination is being covered by a
 ## `uint32_t getMessageCount()`
 Each request received will be counted. The `getMessageCount()` method will return the current state of the counter.
 
+## `uint32_t getErrorCount()`
+Each error response sent will be counted. The `getErrorCount()` method will return the current state of the counter.
+
+## `void resetCounts()`
+The internal counters for both messages and errors can be set to zero using this call.
+
 ## `ModbusMessage localRequest(ModbusMessage request)`
 This function is a simple local interface to issue requests to the server running. Responses are returned immediately - there is no request queueing involved. This call is *blocking* for that reason, so be prepared to have to wait until the response is ready!
 
