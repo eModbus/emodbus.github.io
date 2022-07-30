@@ -63,6 +63,8 @@ A user's request was to be able to drop again previously registered function cod
 
 This call allows you to do exactly that - discarding the callbacks for a given server ID/function code combination or for a server ID alltogether (removing all function code callbacks that may exist for that server ID).
 
+The call will return `true` if at least one callback was removed.
+
 ## `uint16_t getValue(uint8_t *source, uint16_t sourceLength, T &v)`
 Although you will be using `ModbusMessage`'s `get()` function most of the time, there is a complement to the `addValue()` service function described in the ModbusClient section.
 `getValue()` will help you reading MSB-first data from an arbitrary data buffer.
