@@ -74,7 +74,13 @@ To tell a data from an error response, you should use the ``getError()`` call on
 ## `uint32_t getMessageCount()`
 Each request that got successfully enqueued is counted. By calling `getMessageCount()` you will be able to read the number accumulated so far.
 
-Please note that this count is instance-specific, so each ModbusClient instance you created will have its own count.
+Please note that this count (and the error count, respectively) is instance-specific, so each ModbusClient instance you created will have its own count.
+
+## `uint32_t getErrorCount()`
+Each error response received will be counted. The `getErrorCount()` method will return the current state of the counter.
+
+## `void resetCounts()`
+The internal counters for both messages and errors can be set to zero using this call.
 
 ## `void begin()`, <br> `void begin(int coreID)` and <br> `void begin(int coreID, uint32_t interval)` (RTU only)
 This is the most important call to get a ModbusClient instance to work. It will open the request queue and start the background worker task to process the queued requests.
