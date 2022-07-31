@@ -79,3 +79,7 @@ The ``skipLeading0x00()`` call allows to have these bytes droped internally, if 
 
 **Note:** this is a work-around only to cure a symptom and does not fix the issue. It always pays to try to fix the root cause!
 
+## `Error addBroadcastMessage(const uint8_t *data, uint8_t len)`
+This call will add a broadcast request to the queue. 
+`data` may contain whatever you will find appropriate.
+The only thing the library will add is a leading 0x00 byte to signal a broadcast request and the CRC.
