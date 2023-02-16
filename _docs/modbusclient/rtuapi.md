@@ -14,6 +14,28 @@ You will have to have the following include line in your code to make the `Modbu
 #include "ModbusClientRTU.h"
 ```
 
+## Important when using ``HardwareSerial``
+Modbus RTU has been  modified to accept any ``Stream``-based object for reading and writing serial data.
+Note that this requires a version of the ``arduino-esp32`` core of 2.0.x and higher.
+Due to the timing requirements of Modbus, a ``HardwareSerial`` connection needs to be configured properly to work with eModbus.
+
+1. Configure a buffer size suited for your messages. With higher baud rates the standard 128 byte UART buffer needs to be copied from the FIFO multiple times if you are processing requests or responses longer than that.
+The UART buffer needs to be large enough to hold a complete message - else timing errors will happen.<br/>
+A reasonable size for regular Modbus RTU is 260, Modbus ASCII rather will need 520 bytes.<br/>
+The size must be set **before the ``HardwareSerial::begin()`` call** to be effective.<br/>
+The call is like (``Serial1`` taken as an example)<br/>
+``Serial1.setRxBufferSize(260);``
+
+2. Now call your ``Serial``'s ``begin()``.
+3. **This is most important of all!**<br/>
+Set the FIFO full threshold to just 1 byte. This allows eModbus to take care of the timing.
+If you omit this step, you may encounter timeots, broken messages etc.<br/>
+The threshold is set with<br/>
+``Serial1.setRxFIFOFull(1);``
+
+Also note that the ``ModbusServerRTU::begin()`` call now needs to be given the baud rate as first parameter.
+This is used to calculate the necessary interval times between messages on the RTU bus. Incorrect values may lead to messages being missed.
+
 ## `ModbusClientRTU(HardwareSerial& serial)`,<br> `ModbusClientRTU(HardwareSerial& serial, int8_t rtsPin)` and<br> `ModbusClientRTU(HardwareSerial& serial, int8_t rtsPin, uint16_t queueLimit)`
 These are the constructor variants for an instance of the `ModbusClientRTU` type. The parameters are:
 - `serial`: a reference to a Serial interface the Modbus is conncted to (mostly by a RS485 adaptor). This Serial interface must be configured to match the baud rate, data and stop bits and parity of the Modbus.

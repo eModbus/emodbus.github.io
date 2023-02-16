@@ -14,27 +14,53 @@ There are a few differences to the TCP-based ModbusServers:
 - as timing is critical on the Modbus, the background task has a higher priority than others
 - a request received for another server ID not covered by this server will be ignored (rather than answered with an `ILLEGAL_SERVER_ID` error as with TCP)
 
-## `ModbusServerRTU(HardwareSerial& serial, uint32_t timeout)` and<br> `ModbusServerRTU(HardwareSerial& serial, uint32_t timeout, int rtsPin)`
+## Important when using ``HardwareSerial``
+Modbus RTU has been  modified to accept any ``Stream``-based object for reading and writing serial data.
+Note that this requires a version of the ``arduino-esp32`` core of 2.0.x and higher.
+Due to the timing requirements of Modbus, a ``HardwareSerial`` connection needs to be configured properly to work with eModbus.
+
+1. Configure a buffer size suited for your messages. With higher baud rates the standard 128 byte UART buffer needs to be copied from the FIFO multiple times if you are processing requests or responses longer than that.
+The UART buffer needs to be large enough to hold a complete message - else timing errors will happen.<br/>
+A reasonable size for regular Modbus RTU is 260, Modbus ASCII rather will need 520 bytes.<br/>
+The size must be set **before the ``HardwareSerial::begin()`` call** to be effective.<br/>
+The call is like (``Serial1`` taken as an example)<br/>
+``Serial1.setRxBufferSize(260);``
+
+2. Now call your ``Serial``'s ``begin()``.
+3. **This is most important of all!**<br/>
+Set the FIFO full threshold to just 1 byte. This allows eModbus to take care of the timing.
+If you omit this step, you may encounter timeots, broken messages etc.<br/>
+The threshold is set with<br/>
+``Serial1.setRxFIFOFull(1);``
+
+
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+Also note that the ``ModbusServerRTU::begin()`` call now needs to be given the baud rate as first parameter.
+This is used to calculate the necessary interval times between messages on the RTU bus. Incorrect values may lead to messages being missed.
+
+## `ModbusServerRTU(Stream& serial, uint32_t timeout)` and<br> `ModbusServerRTU(Stream& serial, uint32_t timeout, int rtsPin)`
 The first parameter, `serial` is mandatory, as it gives the serial interface used to connect to the RTU Modbus to the server.
 `timeout` is less important as it is for TCP. It defines after what time of inactivity the server should loop around and re-initialize some working data.
 A value of `20000` (20 seconds) is reasonable.
 The third (optional) parameter `rtsPin` is the same as for the RTU Modbus client described above - if you are using a RS485 adaptor requiring a DE/RE line to be maintained, `rtsPin` should be the GPIO number of the wire to that DE/RE line. The library will take care of toggling the pin.
 
-## `ModbusServerRTU(HardwareSerial& serial, uint32_t timeout, RTScallback func)`
+## `ModbusServerRTU(Stream& serial, uint32_t timeout, RTScallback func)`
 The first parameter, `serial` is mandatory, as it gives the serial interface used to connect to the RTU Modbus to the server.
 `timeout` is less important as it is for TCP. It defines after what time of inactivity the server should loop around and re-initialize some working data.
 A value of `20000` (20 seconds) is reasonable.
 - `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
 
-## `bool start()`,<br> `bool start(int coreID)` and <br>``bool start(int coreID, uint32_t interval)``
-With `start()` the server will create its background task and start listening to the Modbus. 
+## `bool begin()`,<br> `bool begin(uint32_t baudrate)` and <br>``bool begin(uint32_t baudrate, int coreID)``
+With `begin()` the server will create its background task and start listening to the Modbus. 
 The optional parameter `coreID` may be used to have that background task run on the named core for multi-core MCUs. Default for ``coreID`` is -1, in which case the system will pick the core for its own rules.
-The third form allows to specify the minimum waiting time after a message has been received to state end-of-message. 
-This helps relaxing the tight timings the Modbus RTU standard requires and may help with slower servers, but strictly speaking is a violation of the Modbus RTU standard.
 
-## `bool stop()`
-The server background process can be stopped and the task be deleted with the `stop()` call. You may start it again with another `start()` afterwards.
-In fact a `start()` to an already running server will stop and then restart it.
+## `bool end()`
+The server background process can be stopped and the task be deleted with the `end()` call. You may start it again with another `begin()` afterwards.
+In fact a `begin()` to an already running server will stop and then restart it.
 
 ## `void useModbusASCII()` and `void useModbusASCII(unsigned long timeout)`
 If you are going to use the Modbus ASCII protocol, you may switch the RTU server to ASCII mode by these calls. In ASCII mode all messages are encoded as a sequence of human-readable ASCII characters.
