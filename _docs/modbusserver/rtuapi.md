@@ -19,7 +19,7 @@ Modbus RTU has been  modified to accept any ``Stream``-based object for reading 
 Note that this requires a version of the ``arduino-esp32`` core of 2.0.x and higher.
 Due to the timing requirements of Modbus, a ``HardwareSerial`` connection needs to be configured properly to work with eModbus.
 
-1. Configure a buffer size suited for your messages. With higher baud rates the standard 128 byte UART buffer needs to be copied from the FIFO multiple times if you are processing requests or responses longer than that.
+1. Configure a buffer size suited for your messages. With higher baud rates (115200 and above up to the ESP32's limit of 5,000,000) and longer messages the standard 128 byte UART buffer needs to be copied from the FIFO multiple times.
 The UART buffer needs to be large enough to hold a complete message - else timing errors will happen.<br/>
 A reasonable size for regular Modbus RTU is 260, Modbus ASCII rather will need 520 bytes.<br/>
 The size must be set **before the ``HardwareSerial::begin()`` call** to be effective.<br/>
@@ -29,10 +29,9 @@ The call is like (``Serial1`` taken as an example)<br/>
 2. Now call your ``Serial``'s ``begin()``.
 3. **This is most important of all!**<br/>
 Set the FIFO full threshold to just 1 byte. This allows eModbus to take care of the timing.
-If you omit this step, you may encounter timeots, broken messages etc.<br/>
+If you omit this step, you may encounter timeouts, broken messages etc.<br/>
 The threshold is set with<br/>
 ``Serial1.setRxFIFOFull(1);``
-
 
 {: .ml-8 }
 Note
@@ -54,8 +53,9 @@ The first parameter, `serial` is mandatory, as it gives the serial interface use
 A value of `20000` (20 seconds) is reasonable.
 - `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
 
-## `bool begin()`,<br> `bool begin(uint32_t baudrate)` and <br>``bool begin(uint32_t baudrate, int coreID)``
+## `bool begin(uint32_t baudrate)` and <br>``bool begin(uint32_t baudrate, int coreID)``
 With `begin()` the server will create its background task and start listening to the Modbus. 
+You need to give the baud rate of the used ``Stream`` as first parameter to enable eModbus to correctly calculate the interval between messages!
 The optional parameter `coreID` may be used to have that background task run on the named core for multi-core MCUs. Default for ``coreID`` is -1, in which case the system will pick the core for its own rules.
 
 ## `bool end()`

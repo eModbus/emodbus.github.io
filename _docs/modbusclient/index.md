@@ -52,7 +52,9 @@ Now we will bring everything together in the `setup()` function:
 ```cpp
 void setup() {
 // Set up Serial2 connected to Modbus RTU
+  Serial2.setRxBufferSize(260);
   Serial2.begin(19200, SERIAL_8N1);
+  Serial2.setRxFIFOFull(1);
 
 // Set up ModbusClientRTU client.
 // - provide onData and onError handler functions
@@ -60,7 +62,7 @@ void setup() {
   RS485.onErrorHandler(&handleError);
 
 // Start ModbusClientRTU background task
-  RS485.begin();
+  RS485.begin(19200);
 }
 ```
 

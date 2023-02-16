@@ -23,6 +23,19 @@ The optional `queueLimit` parameter lets you define the maximum number of reques
 ## `ModbusClientTCP(Client& client, IPAddress host, uint16_t port)` and<br> `ModbusClientTCP(Client& client, IPAddress host, uint16_t port, uint16_t queueLimit)`
 Alternatively you may give the initial target host IP address and port number to be used for communications. This can be sensible if you have to set up a ModbusClientTCP client dedicated to one single target host.
 
+## `void begin()` and <br> `void begin(int coreID)`
+This is the most important call to get a ModbusClient instance to work. It will open the request queue and start the background worker task to process the queued requests.
+
+The second form of `begin()` allows you to choose a CPU core for the worker task to run (only on multi-core systems like the ESP32). 
+
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+The worker task is running forever or until the ModbusClient instance is killed that started it. The destructor will take care of all requests still on the queue and remove those, then will stop the running worker task.
+
+
 ## `void setTimeout(uint32_t timeout)` and<br> `void setTimeout(uint32_t timeout, uint32_t interval)` 
 Similar to the ModbusClientRTU timeout, you may specify a time in milliseconds that will determine if a `TIMEOUT` error occurred. The worker task will wait the specified time without data arriving to then state a timeout and return the error response for it. The default value is 2000 - 2 seconds.
 

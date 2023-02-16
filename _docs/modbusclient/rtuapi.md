@@ -33,10 +33,15 @@ If you omit this step, you may encounter timeots, broken messages etc.<br/>
 The threshold is set with<br/>
 ``Serial1.setRxFIFOFull(1);``
 
-Also note that the ``ModbusServerRTU::begin()`` call now needs to be given the baud rate as first parameter.
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+Also note that the ``ModbusClientRTU::begin()`` call now needs to be given the baud rate as first parameter.
 This is used to calculate the necessary interval times between messages on the RTU bus. Incorrect values may lead to messages being missed.
 
-## `ModbusClientRTU(HardwareSerial& serial)`,<br> `ModbusClientRTU(HardwareSerial& serial, int8_t rtsPin)` and<br> `ModbusClientRTU(HardwareSerial& serial, int8_t rtsPin, uint16_t queueLimit)`
+## `ModbusClientRTU(Stream& serial)`,<br> `ModbusClientRTU(Stream& serial, int8_t rtsPin)` and<br> `ModbusClientRTU(Stream& serial, int8_t rtsPin, uint16_t queueLimit)`
 These are the constructor variants for an instance of the `ModbusClientRTU` type. The parameters are:
 - `serial`: a reference to a Serial interface the Modbus is conncted to (mostly by a RS485 adaptor). This Serial interface must be configured to match the baud rate, data and stop bits and parity of the Modbus.
 - `rtsPin`: some RS485 adaptors have "DE/RE" lines to control the half duplex communication. When writing to the bus, the lines have to be set accordingly. DE and RE usually have opposite logic levels, so that they can be connected to a single GPIO that is set to HIGH for writing and LOW for reading. This will be done by the library, if a GPIO pin number is given for `rtsPin`. Leave this parameter out or use `-1` as value if you do not need this GPIO (usually with RS485 adaptors doing auto half duplex themselves).
@@ -49,11 +54,23 @@ Note
 {: .px-8 }
 While the queue holds pointers to the requests only, the requests need memory as well. If you choose a `queueLimit` too large, you may encounter "out of memory" conditions!
 
-## `ModbusClientRTU(HardwareSerial& serial, RTScallback func)` and<br> `ModbusClientRTU(HardwareSerial& serial, RTScallback func, uint16_t queueLimit)`
+## `ModbusClientRTU(Stream& serial, RTScallback func)` and<br> `ModbusClientRTU(Stream& serial, RTScallback func, uint16_t queueLimit)`
 These are the alternative constructor variants for an instance of the `ModbusClientRTU` type. The parameters are:
 - `serial`: a reference to a Serial interface the Modbus is conncted to (mostly by a RS485 adaptor). This Serial interface must be configured to match the baud rate, data and stop bits and parity of the Modbus.
 - `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
 - `queueLimit`: this specifies the number of requests that may be placed on the worker task's queue. If the queue has reached this limit, the next `addRequest` call will return a `REQUEST_QUEUE_FULL` error. The default value built in is 100.
+
+## `void begin(uint32_t baudrate)` and <br> `void begin(uint32_t baudrate, int coreID)`
+This is the most important call to get a ModbusClient instance to work. It will open the request queue and start the background worker task to process the queued requests.
+
+The second form of `begin()` allows you to choose a CPU core for the worker task to run (only on multi-core systems like the ESP32). This is **highly recommended** in particular for the `ModbusClientRTU` client, as the handling of the RS485 Modbus is a time-critical and will profit from having its own core to run.
+
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+The worker task is running forever or until the ModbusClient instance is killed that started it. The destructor will take care of all requests still on the queue and remove those, then will stop the running worker task.
 
 ## `void setTimeout(uint32_t TOV)`
 This call lets you define the time for stating a response timeout. `TOV` is defined in **milliseconds**. When the worker task is waiting for a response from a server, and the specified number of milliseconds has passed without data arriving, it will return a `TIMEOUT` error response.
