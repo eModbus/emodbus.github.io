@@ -14,10 +14,28 @@ You will have to have the following include line in your code to make the `Modbu
 #include "ModbusClientRTU.h"
 ```
 
-## `ModbusClientRTU(HardwareSerial& serial)`,<br> `ModbusClientRTU(HardwareSerial& serial, int8_t rtsPin)` and<br> `ModbusClientRTU(HardwareSerial& serial, int8_t rtsPin, uint16_t queueLimit)`
-These are the constructor variants for an instance of the `ModbusClientRTU` type. The parameters are:
-- `serial`: a reference to a Serial interface the Modbus is conncted to (mostly by a RS485 adaptor). This Serial interface must be configured to match the baud rate, data and stop bits and parity of the Modbus.
-- `rtsPin`: some RS485 adaptors have "DE/RE" lines to control the half duplex communication. When writing to the bus, the lines have to be set accordingly. DE and RE usually have opposite logic levels, so that they can be connected to a single GPIO that is set to HIGH for writing and LOW for reading. This will be done by the library, if a GPIO pin number is given for `rtsPin`. Leave this parameter out or use `-1` as value if you do not need this GPIO (usually with RS485 adaptors doing auto half duplex themselves).
+## Important when using ``HardwareSerial``
+Modbus RTU has been  modified to accept any ``Stream``-based object for reading and writing serial data.
+Note that this requires a version of the ``arduino-esp32`` core of 2.0.x and higher.
+Due to the timing requirements of Modbus, a ``HardwareSerial`` connection needs to be configured properly to work with eModbus.
+
+1. Call the ``RTUutils::prepareHardwareSerial()`` method for your serial interface
+The UART buffer needs to be large enough to hold a complete message - else timing errors will happen.<br/>
+A reasonable size for Modbus RTU is 260, this is set by the method for both Rx/Tx buffers.<br/>
+The call must be made **before the ``HardwareSerial::begin()`` call** to be effective.<br/>
+The call is like (``Serial1`` taken as an example)<br/>
+``RTUutils.prepareHardwareSerial(Serial1);``
+
+2. Now call your ``Serial``'s ``begin()``.
+
+Also note that the ``ModbusClientRTU::begin()`` call needs to be given the serial interface as first parameter.
+Additionally any ``Stream``-type interface needs the baud rate as a second parameter as well. 
+A ``HardwareSerial`` is requested internally for the baud rate.
+This is used to calculate the interval times between messages on the RTU bus. Incorrect values may lead to messages being missed.
+
+## `ModbusClientRTU()`,<br> `ModbusClientRTU(int8_t rtsPin)` and<br> `ModbusClientRTU(int8_t rtsPin, uint16_t queueLimit)`
+These are the constructor variants for an instance of the `ModbusClientRTU` type. The optional parameters are:
+- `rtsPin`: a GPIO number, where the DE/RE wire of the attached RS485 adapter is connected - should your adapter need one.
 - `queueLimit`: this specifies the number of requests that may be placed on the worker task's queue. If the queue has reached this limit, the next `addRequest` call will return a `REQUEST_QUEUE_FULL` error. The default value built in is 100.
 
 {: .ml-8 }
@@ -27,11 +45,24 @@ Note
 {: .px-8 }
 While the queue holds pointers to the requests only, the requests need memory as well. If you choose a `queueLimit` too large, you may encounter "out of memory" conditions!
 
-## `ModbusClientRTU(HardwareSerial& serial, RTScallback func)` and<br> `ModbusClientRTU(HardwareSerial& serial, RTScallback func, uint16_t queueLimit)`
+## `ModbusClientRTU(RTScallback func)` and<br> `ModbusClientRTU(RTScallback func, uint16_t queueLimit)`
 These are the alternative constructor variants for an instance of the `ModbusClientRTU` type. The parameters are:
-- `serial`: a reference to a Serial interface the Modbus is conncted to (mostly by a RS485 adaptor). This Serial interface must be configured to match the baud rate, data and stop bits and parity of the Modbus.
 - `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
 - `queueLimit`: this specifies the number of requests that may be placed on the worker task's queue. If the queue has reached this limit, the next `addRequest` call will return a `REQUEST_QUEUE_FULL` error. The default value built in is 100.
+
+## `void begin(HardwareSerial& s)` and <br> `void begin(HardwareSerial& s, int coreID)` or `void begin(Stream& s, uint32_t baudRate)` and `void begin(Stream& s, uint32_t baudRate, int coreID)`
+This is the most important call to get a ModbusClient instance to work. It will open the request queue and start the background worker task to process the queued requests.
+
+The ``Stream``-type interface requires the used baud rate as a second mandatory parameter. For ``HardwareSerial`` the baud rate is inquired internally.
+
+The second forms of `begin()` allow you to choose a CPU core for the worker task to run (only on multi-core systems like the ESP32). This is **highly recommended** in particular for the `ModbusClientRTU` client, as the handling of the RS485 Modbus is a time-critical and will profit from having its own core to run.
+
+{: .ml-8 }
+Note
+{: .label .label-yellow}
+
+{: .px-8 }
+The worker task is running forever or until the ModbusClient instance is killed that started it. The destructor will take care of all requests still on the queue and remove those, then will stop the running worker task.
 
 ## `void setTimeout(uint32_t TOV)`
 This call lets you define the time for stating a response timeout. `TOV` is defined in **milliseconds**. When the worker task is waiting for a response from a server, and the specified number of milliseconds has passed without data arriving, it will return a `TIMEOUT` error response.

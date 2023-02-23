@@ -82,22 +82,6 @@ Each error response received will be counted. The `getErrorCount()` method will 
 ## `void resetCounts()`
 The internal counters for both messages and errors can be set to zero using this call.
 
-## `void begin()`, <br> `void begin(int coreID)` and <br> `void begin(int coreID, uint32_t interval)` (RTU only)
-This is the most important call to get a ModbusClient instance to work. It will open the request queue and start the background worker task to process the queued requests.
-
-The second form of `begin()` allows you to choose a CPU core for the worker task to run (only on multi-core systems like the ESP32). This is **highly recommended** in particular for the `ModbusClientRTU` client, as the handling of the RS485 Modbus is a time-critical and will profit from having its own core to run.
-
-The third form adds a way to stretch the allowable time between messages to detect an end-of-message state. 
-The ``interval`` parameter specifies the number of milliseconds to wait until an end-of-message is assumed.
-This may be useful for slow reacting servers, but be aware that this is a violation of the Modbus standard, strictly speaking!
-
-{: .ml-8 }
-Note
-{: .label .label-yellow}
-
-{: .px-8 }
-The worker task is running forever or until the ModbusClient instance is killed that started it. The destructor will take care of all requests still on the queue and remove those, then will stop the running worker task.
-
 ## Setting up requests
 
 ### Asynchronous requests (non-blocking)

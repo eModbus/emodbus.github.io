@@ -16,11 +16,11 @@ First you have to include the matching header file:
 #include "ModbusClientRTU.h"
 ```
 
-For ModbusClientRTU a Serial interface is required, that connects to your RS485 adaptor. This is given as parameter to the `ModbusClientRTU` constructor. An optional pin can be given to use half-duplex.
+For ModbusClientRTU a Serial interface is required, that connects to your RS485 adaptor. The `ModbusClientRTU` constructor will accept an optional pin to use for the half-duplex DE/RE wire.
 
 ```cpp
-ModbusClientRTU RS485(Serial2);          // for auto half-duplex
-ModbusClientRTU RS485(Serial2, rtsPin);  // use rtsPin to toggle DE/RE in half-duplex
+ModbusClientRTU RS485();          // for auto half-duplex
+ModbusClientRTU RS485(rtsPin);  // use rtsPin to toggle DE/RE in half-duplex
 ```
 
 Next we will define a callback function for data responses coming in. This example will print out a hexadecimal dump of the response data, using the range iterator:
@@ -52,6 +52,7 @@ Now we will bring everything together in the `setup()` function:
 ```cpp
 void setup() {
 // Set up Serial2 connected to Modbus RTU
+  RTUutils::prepareHardwareSerial(Serial2);
   Serial2.begin(19200, SERIAL_8N1);
 
 // Set up ModbusClientRTU client.
@@ -60,7 +61,7 @@ void setup() {
   RS485.onErrorHandler(&handleError);
 
 // Start ModbusClientRTU background task
-  RS485.begin();
+  RS485.begin(Serial2);
 }
 ```
 
