@@ -19,43 +19,34 @@ Modbus RTU has been  modified to accept any ``Stream``-based object for reading 
 Note that this requires a version of the ``arduino-esp32`` core of 2.0.x and higher.
 Due to the timing requirements of Modbus, a ``HardwareSerial`` connection needs to be configured properly to work with eModbus.
 
-1. Configure a buffer size suited for your messages. With higher baud rates (115200 and above up to the ESP32's limit of 5,000,000) and longer messages the standard 128 byte UART buffer needs to be copied from the FIFO multiple times.
+1. Call the ``RTUutils::prepareHardwareSerial()`` method for your serial interface
 The UART buffer needs to be large enough to hold a complete message - else timing errors will happen.<br/>
-A reasonable size for regular Modbus RTU is 260, Modbus ASCII rather will need 520 bytes.<br/>
-The size must be set **before the ``HardwareSerial::begin()`` call** to be effective.<br/>
+A reasonable size for Modbus RTU is 260, this is set by the method for both Rx/Tx buffers.<br/>
+The call must be made **before the ``HardwareSerial::begin()`` call** to be effective.<br/>
 The call is like (``Serial1`` taken as an example)<br/>
-``Serial1.setRxBufferSize(260);``
+``RTUutils.prepareHardwareSerial(Serial1);``
 
 2. Now call your ``Serial``'s ``begin()``.
-3. **This is most important of all!**<br/>
-Set the FIFO full threshold to just 1 byte. This allows eModbus to take care of the timing.
-If you omit this step, you may encounter timeouts, broken messages etc.<br/>
-The threshold is set with<br/>
-``Serial1.setRxFIFOFull(1);``
 
-{: .ml-8 }
-Note
-{: .label .label-yellow}
+Also note that the ``ModbusServerRTU::begin()`` call needs to be given the serial interface as first parameter.
+Additionally any ``Stream``-type interface needs the baud rate as a second parameter as well. 
+A ``HardwareSerial`` is requested internally for the baud rate.
+This is used to calculate the interval times between messages on the RTU bus. Incorrect values may lead to messages being missed.
 
-{: .px-8 }
-Also note that the ``ModbusServerRTU::begin()`` call now needs to be given the baud rate as first parameter.
-This is used to calculate the necessary interval times between messages on the RTU bus. Incorrect values may lead to messages being missed.
-
-## `ModbusServerRTU(Stream& serial, uint32_t timeout)` and<br> `ModbusServerRTU(Stream& serial, uint32_t timeout, int rtsPin)`
-The first parameter, `serial` is mandatory, as it gives the serial interface used to connect to the RTU Modbus to the server.
-`timeout` is less important as it is for TCP. It defines after what time of inactivity the server should loop around and re-initialize some working data.
+## `ModbusServerRTU()` and `ModbusServerRTU(uint32_t timeout)` and<br> `ModbusServerRTU(uint32_t timeout, int rtsPin)`
+`timeout` is less important as it is for TCP, but must be defined anyway. It defines after what time of inactivity the server should loop around and re-initialize some working data.
 A value of `20000` (20 seconds) is reasonable.
-The third (optional) parameter `rtsPin` is the same as for the RTU Modbus client described above - if you are using a RS485 adaptor requiring a DE/RE line to be maintained, `rtsPin` should be the GPIO number of the wire to that DE/RE line. The library will take care of toggling the pin.
+The second (optional) parameter `rtsPin` is the same as for the RTU Modbus client - if you are using a RS485 adaptor requiring a DE/RE line to be maintained, `rtsPin` should be the GPIO number of the wire to that DE/RE line. The library will take care of toggling the pin.
 
-## `ModbusServerRTU(Stream& serial, uint32_t timeout, RTScallback func)`
-The first parameter, `serial` is mandatory, as it gives the serial interface used to connect to the RTU Modbus to the server.
-`timeout` is less important as it is for TCP. It defines after what time of inactivity the server should loop around and re-initialize some working data.
+## `ModbusServerRTU(uint32_t timeout, RTScallback func)`
+`timeout` is less important as it is for TCP, but must be defined anyway. It defines after what time of inactivity the server should loop around and re-initialize some working data.
 A value of `20000` (20 seconds) is reasonable.
 - `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
 
-## `bool begin(uint32_t baudrate)` and <br>``bool begin(uint32_t baudrate, int coreID)``
+## `void begin(Stream& s, uint32_t baudrate)` and <br>``void begin(Stream& s, uint32_t baudrate, int coreID)`` or ``void begin(HardwareSerial& s)`` and ``void begin(HardwareSerial& s, int coreID)``
 With `begin()` the server will create its background task and start listening to the Modbus. 
 You need to give the baud rate of the used ``Stream`` as first parameter to enable eModbus to correctly calculate the interval between messages!
+For ``HardwareSerial`` interfaces the baud rate is inquired internally.
 The optional parameter `coreID` may be used to have that background task run on the named core for multi-core MCUs. Default for ``coreID`` is -1, in which case the system will pick the core for its own rules.
 
 ## `bool end()`
