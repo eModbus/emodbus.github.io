@@ -82,6 +82,10 @@ Each error response received will be counted. The `getErrorCount()` method will 
 ## `void resetCounts()`
 The internal counters for both messages and errors can be set to zero using this call.
 
+## `void clearQueue()`
+This method will immediately remove all pending requests from the queue - in case of an emergency or if a general cleanup is desired. 
+If requests have been sent already, the responses to those will be dropped (with a warning log message).
+
 ## Setting up requests
 
 ### Asynchronous requests (non-blocking)
