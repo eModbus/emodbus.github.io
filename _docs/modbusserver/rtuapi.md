@@ -43,11 +43,13 @@ The second (optional) parameter `rtsPin` is the same as for the RTU Modbus clien
 A value of `20000` (20 seconds) is reasonable.
 - `func`: this must be a user-defined callback function of type ``void func(bool level);``. This function is called every time the RS485 adaptor's "DE/RE" line has to be toggled. The required logic level is given as the only parameter to the function. This is relevant if your adaptor will need a special treatment to set these levels (being behind a port extender or such).
 
-## `void begin(Stream& s, uint32_t baudrate)` and <br>``void begin(Stream& s, uint32_t baudrate, int coreID)`` or ``void begin(HardwareSerial& s)`` and ``void begin(HardwareSerial& s, int coreID)``
+## `void begin(Stream& s, uint32_t baudrate)`, <br>``void begin(Stream& s, uint32_t baudrate, int coreID)`` and <br>``void begin(Stream& s, uint32_t baudrate, int coreID, uint32_t userInterval)`` or <br>``void begin(HardwareSerial& s)``, <br>``void begin(HardwareSerial& s, int coreID)`` and <br>``void begin(HardwareSerial& s, int coreID, uint32_t userInterval)``
 With `begin()` the server will create its background task and start listening to the Modbus. 
 You need to give the baud rate of the used ``Stream`` as first parameter to enable eModbus to correctly calculate the interval between messages!
 For ``HardwareSerial`` interfaces the baud rate is inquired internally.
 The optional parameter `coreID` may be used to have that background task run on the named core for multi-core MCUs. Default for ``coreID`` is -1, in which case the system will pick the core for its own rules.
+The last, again optional, parameter can be ``userInterval``. There are devices in the wild that can not handle the (short) Modbus standard quiet times ("intervals") but will need a longer time between messages to recover. 
+The user defined interval is given in micro seconds, but may not be shorter than the standard defines for the given baud rate.
 
 ## `bool end()`
 The server background process can be stopped and the task be deleted with the `end()` call. You may start it again with another `begin()` afterwards.

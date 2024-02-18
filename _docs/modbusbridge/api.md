@@ -26,7 +26,7 @@ Note that there currently is no AsyncTCP bridge (yet), due to differences in int
 ## `ModbusBridge`
 This is the constructor for a TCP-based bridge.
 
-## `ModbusBridge(HardwareSerial& serial, uint32_t timeout)`, <br> `ModbusBridge(HardwareSerial& serial, uint32_t timeout, int rtsPin)` and <br>`ModbusBridge(HardwareSerial& serial, uint32_t timeout, RTScallback func)`
+## `ModbusBridge(uint32_t timeout)`, <br> `ModbusBridge(uint32_t timeout, int rtsPin)` and <br>`ModbusBridge(uint32_t timeout, RTScallback func)`
 The corresponding constructors for the RTU bridge variant. All parameters are those of the underlying RTU server.
 
 ## `bool attachServer(uint8_t aliasID, uint8_t serverID, uint8_t functionCode, ModbusClient *client)` and<br> `bool attachServer(uint8_t aliasID, uint8_t serverID, uint8_t functionCode, ModbusClient *client, IPAddress host, uint16_t port)`
