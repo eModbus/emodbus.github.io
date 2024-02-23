@@ -58,6 +58,18 @@ Note
 {: .px-8 }
 Do not use the first byte of your `ModbusMessage` as `0xFF`, followed by one of `0xF0` or `0xF1`, as these are used internally for `NIL_RESPONSE` and `ECHO_RESPONSE`!
 
+``registerWorker()`` will also accept ``ANY_SERVER`` as a server ID.
+
+*This is potentially dangerous*, as it will catch all requests to server IDs that are not covered by explicitly defined workers!
+Explicitly registered workers for combinations of a distinct server ID and a function code (also ``ANY_FUNCTION_CODE``) will have preference to the generic worker at all times.
+
+It may be needed for some devices in the wild, though, that are (mis)using the server ID for functional purposes.
+
+**Be warned again: using ``ANY_SERVER`` may break your server's function!**
+
+``ANY_SERVER`` still is invalid for issueing requests or attaching server IDs to a bridge.
+
+
 ## `bool unregisterWorker(uint8_t serverID)` and `bool unregisterWorker(uint8_t serverID, uint8_t functionCode)`
 A user's request was to be able to drop again previously registered function code callbacks. The application was to have freshly initialized devices react on a proprietary server ID to accept their 'real' server ID with a request. Then the callback for the initial server ID needs to be dropped.
 
