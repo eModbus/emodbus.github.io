@@ -11,13 +11,15 @@ has_children: true
 # ModbusServerTCP
 
 The TCP server can be setup using different implementations:
-- Ethernet
+- Ethernet / ETH
 - WiFi
 - Async TCP
 
-This makes the server very versatile and usable in many different hardware combinations: ESP32 with built-in WiFi, a W5500 or other board supported by ESP-IDF: [link to ESP-IDF descriptions](https://github.com/espressif/esp-idf/blob/master/examples/ethernet/basic/README.md).
+This makes the server very versatile and usable in many different hardware combinations: ESP32 with built-in WiFi, a W5500 or other board.
+Boards using the W5500 range of adapters are supported by the ``...Ethernet.h`` components.
+Other boards with integrated Ethernet (like the WT32-ETH01) that will require the ``ETH.h`` definitions are supported by the ``...ETH.h`` files.
 
-The WiFi server does not rely on external libraries. If using Ethernet or AsyncTCP, please make sure to have to dependencies installed for your system. When using PlatformIO, dependency management is done for you.
+The WiFi server does not rely on external libraries. If using Ethernet or AsyncTCP, please make sure to have to dependencies installed for your system. When using PlatformIO, dependency management is (mostly) done for you.
 
 ## ModbusServerTCP API
 ### Constructor
@@ -28,6 +30,10 @@ ModbusServerWiFi myServer;
 or
 ```
 ModbusServerEthernet myServer;
+```
+or
+```
+ModbusServerETH myServer;
 ```
 or
 ```

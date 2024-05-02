@@ -55,7 +55,7 @@ The `aliasID` has to be attached already before you may use this call successful
 This call is the opposite to `addFunctionCode()` - the function code you give here as a parameter will **not** be served by the bridge, but responded to with an `ILLEGAL_FUNCTION` error response.
 Like its sibling, this call will return `false` if the `aliasID` was not yet `attached` to the bridge.
 
-# Filtering
+# Filtering servers
 Given the means of both the underlying `ModbusServer` and the `ModbusBridge` itself, the access to the remote servers can be controlled in multiple ways.
 
 As a principle, the bridge will only react on server IDs made known to it - either by the `attachServer()` bridge call or by the server's `registerWorker()` call for a locally served function code. So a server ID filter is intrinsically always active. Server IDs not known will not be served.
@@ -91,3 +91,44 @@ Warning
 
 {: .px-8 }
 Registering local worker functions for the serverID of a remote server may completely block the external server! There is no way to go back once you did that!
+
+# Filtering requests and responses
+Normally a bridge will forward requests unmodifed to the addresses servers as well as return their responses back to the requesting clients.
+There are cases where the client is expecting a response the server is not able to provide, or the server may need a request slightly different the client is not aware of.
+
+In these cases you may install your own filtering functions for requests and/or responses that will be given the request or response as it was received.
+These functions then can modify parts or the complete message to better suit the needs of the recipient.
+
+As an exception to the rule, both server ID and function code may not be modified to keep request and response matching each other. 
+Note that this also means that you may not prevent an error state from the response being forwarded to the client, as the function code from the original response will be preserved!
+
+## Filter activation/deactivation
+A set of four calls (for requests/responses and activation/deactivation, respectively) allows to manage your own filters.
+
+``bool addRequestFilter(uint8_t aliasID, MBSworker rF);``
+
+``bool removeRequestFilter(uint8_t aliasID);``
+
+``bool addResponseFilter(uint8_t aliasID, MBSworker rF);``
+
+``bool removeResponseFilter(uint8_t aliasID);``
+
+As you can see, a filter always is applied to a single server ID that the bridge is exposing to the clients.
+It is mandatory to have that server ID registered before with an ``attachServer`` call, else the filter will not be installed.
+This way you may have filters applied to a certain server without affecting others on the same bridge.
+
+A filter function always must have the ``MBSworker`` signature, that is, the function must accept a ``ModbusMessage`` as the only parameter and return a ``ModbusMessage`` itself.
+
+## Application example
+Here is an example of a response filter function, that will not modify anything but just dump out the response:
+```
+// filterResponse() - to be applied to returning responses
+ModbusMessage filterResponse(ModbusMessage response) {
+  // Just dump out every response
+  HEXDUMP_N("Response in filter", response.data(), response.size());
+  // In any case forward the response
+  return response;
+}
+```
+Such a filter may be handy for documentation or debugging purposes.
+
