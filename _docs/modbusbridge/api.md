@@ -92,6 +92,9 @@ Warning
 {: .px-8 }
 Registering local worker functions for the serverID of a remote server may completely block the external server! There is no way to go back once you did that!
 
+Finally please note that you may use ``attachServer(ANY_SERVER, ANY_SERVER, ANY_FUNCTION_CODE, client)`` to create an "open bridge" that will let pass any request and send it unmodified to the attached client. 
+Thus any server on the Modbus behind the client may be addressed without explicitly adding a rule for it.
+
 # Filtering requests and responses
 Normally a bridge will forward requests unmodifed to the addresses servers as well as return their responses back to the requesting clients.
 There are cases where the client is expecting a response the server is not able to provide, or the server may need a request slightly different the client is not aware of.
