@@ -8,5 +8,5 @@ permalink: /
 
 # About eModbus
 
-Release 1.6
+Release 1.7.4
 
